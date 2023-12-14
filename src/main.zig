@@ -1,15 +1,17 @@
 const std = @import("std");
 
 pub fn main() !void {
-    const allocator = std.heap.page_allocator;
-    var file = try std.fs.cwd().openFile("example.txt", .{});
+    var file = try std.fs.cwd().openFile("puzzles/all.txt", .{});
     defer file.close();
 
     var buf_reader = std.io.bufferedReader(file.reader());
-    while (try buf_reader.readUntilDelimiterOrEof(allocator, '\n')) |line| : (buf_reader = buf_reader.save()) {
-        var it = std.mem.tokenize(line, "");
+    const in_stream = buf_reader.reader();
+    var buf: [1024]u8 = undefined;
+
+    while (try in_stream.readUntilDelimiterOrEof(&buf, '\n')) |line| {
+        var it = std.mem.tokenize(u8, line, "");
         while (it.next()) |char| {
-            std.debug.print("{}\n", .{char});
+            std.debug.print("{s}\n", .{char});
         }
     }
 }
