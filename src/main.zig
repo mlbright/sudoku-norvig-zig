@@ -1,6 +1,6 @@
 const std = @import("std");
 
-pub fn main() !void {
+pub fn from_file() !void {
     var file = try std.fs.cwd().openFile("puzzles/all.txt", .{});
     defer file.close();
 
@@ -14,4 +14,8 @@ pub fn main() !void {
             std.debug.print("{s}\n", .{char});
         }
     }
+}
+
+pub fn main() !void {
+    try from_file();
 }
