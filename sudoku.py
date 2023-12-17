@@ -34,7 +34,6 @@ for unit in iunitlist:
         simplified_unit.append(isquares[s])
     unitlist.append(simplified_unit)
 
-# units = dict((s, [u for u in unitlist if s in u]) for s in range(len(squares)))
 units = []
 for i in range(len(squares)):
     group = []
@@ -45,7 +44,6 @@ for i in range(len(squares)):
                 break
     units.append(group)
 
-# peers = dict((s, set(sum(units[s], [])) - set([s])) for s in range(len(squares)))
 peers = []
 for i in range(len(squares)):
     peer_set = set()
@@ -69,11 +67,6 @@ def test():
         [18, 19, 20, 21, 22, 23, 24, 25, 26],
         [0, 1, 2, 9, 10, 11, 18, 19, 20],
     ]
-    # assert units["C2"] == [
-    #     ["A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2", "I2"],
-    #     ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9"],
-    #     ["A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3"],
-    # ]
     assert peers[19] == {
         0,
         1,
@@ -96,30 +89,6 @@ def test():
         64,
         73,
     }
-    # assert peers["C2"] == set(
-    #     [
-    #         "A1",
-    #         "A2",
-    #         "A3",
-    #         "B1",
-    #         "B2",
-    #         "B3",
-    #         "C1",
-    #         "C3",
-    #         "C4",
-    #         "C5",
-    #         "C6",
-    #         "C7",
-    #         "C8",
-    #         "C9",
-    #         "D2",
-    #         "E2",
-    #         "F2",
-    #         "G2",
-    #         "H2",
-    #         "I2",
-    #     ]
-    # )
     print("All tests pass.")
 
 
@@ -311,7 +280,7 @@ hard1 = (
 
 if __name__ == "__main__":
     test()
-    solve_all([random_puzzle() for _ in range(99)], "random", 100.0)
+    # solve_all([random_puzzle() for _ in range(99)], "random", 100.0)
     solve_all(from_file("puzzles/easy50.txt"), "easy", None)
     solve_all(from_file("puzzles/top95.txt"), "hard", 0.04)
     solve_all(from_file("puzzles/hardest.txt"), "hardest", None)
