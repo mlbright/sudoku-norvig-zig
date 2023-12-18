@@ -8,10 +8,9 @@ pub fn readInputFile(allocator: std.mem.Allocator, filename: []const u8) ![]cons
     return try file.reader().readAllAlloc(allocator, stat.size);
 }
 
-pub fn fromFile(allocator: std.mem.Allocator, filename: []const u8) ![][]const u8 {
-    const content = try readInputFile(allocator, filename);
+pub fn fromFile(allocator: std.mem.Allocator, content: []const u8) ![][]const u8 {
     var lines = std.ArrayList([]const u8).init(allocator);
-    var readIter = std.mem.tokenize(u8, content, "\n");
+    var readIter = std.mem.tokenizeScalar(u8, content, '\n');
     while (readIter.next()) |line| {
         try lines.append(line);
     }
@@ -27,7 +26,9 @@ pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
-    const gridList = try fromFile(allocator, "./puzzles/all.txt");
+    const content = try readInputFile(allocator, "./puzzles/all.txt");
+    defer allocator.free(content);
+    const gridList = try fromFile(allocator, content);
     defer allocator.free(gridList);
     std.debug.print("{d}\n", .{gridList.len});
     for (gridList) |grid| {
