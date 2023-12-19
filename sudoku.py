@@ -268,7 +268,7 @@ def random_puzzle(N=17):
 
 
 grid1 = (
-    "003020600900305001001806400008102900700000008006708200002609500800203009005010300"
+    "..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3.."
 )
 grid2 = (
     "4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......"
@@ -280,13 +280,13 @@ hard1 = (
 
 if __name__ == "__main__":
     test()
-    # solve_all([random_puzzle() for _ in range(99)], "random", 100.0)
+    solve_all([random_puzzle() for _ in range(99)], "random", 100.0)
     solve_all(from_file("puzzles/easy50.txt"), "easy", None)
-    solve_all(from_file("puzzles/top95.txt"), "hard", 0.04)
+    solve_all(from_file("puzzles/top95.txt"), "hard", 0.05)
     solve_all(from_file("puzzles/hardest.txt"), "hardest", None)
     solve_all(from_file("puzzles/hardest20.txt"), "hardest20", None)
-    solve_all(from_file("puzzles/hardest20x50.txt"), "hardest20x50", None)
-    solve_all(from_file("puzzles/topn87.txt"), "topn87", None)
+    solve_all(from_file("puzzles/hardest20x50.txt"), "hardest20x50", 0.05)
+    solve_all(from_file("puzzles/topn87.txt"), "topn87", 0.05)
 
 ## References used:
 ## http://www.scanraid.com/BasicStrategies.htm
