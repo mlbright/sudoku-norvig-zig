@@ -17,6 +17,18 @@ pub fn fromFile(allocator: std.mem.Allocator, content: []const u8) ![][]const u8
     return try lines.toOwnedSlice();
 }
 
+pub fn solveAll(grids: [][]const u8, show_if: f64) !void {
+    _ = show_if;
+
+    std.debug.print("{d}\n", .{grids.len});
+    for (grids) |grid| {
+        std.debug.print("{s}\n", .{grid});
+        for (0..grid.len) |c| {
+            std.debug.print("{c}\n", .{grid[c]});
+        }
+    }
+}
+
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpa.deinit();
@@ -25,13 +37,7 @@ pub fn main() !void {
     defer allocator.free(content);
     const gridList = try fromFile(allocator, content);
     defer allocator.free(gridList);
-    std.debug.print("{d}\n", .{gridList.len});
-    for (gridList) |grid| {
-        std.debug.print("{s}\n", .{grid});
-        for (0..grid.len) |c| {
-            std.debug.print("{c}\n", .{grid[c]});
-        }
-    }
+    try solveAll(gridList, 0.04);
     // solve_all(from_file("puzzles/top95.txt"), "hard", 0.04);
     // solve_all(from_file("puzzles/easy50.txt"), "easy", null);
     // solve_all(from_file("puzzles/hardest.txt"), "hardest", null);
