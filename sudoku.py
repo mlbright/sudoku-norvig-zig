@@ -100,7 +100,7 @@ def parse_grid(grid):
     return False if a contradiction is detected."""
     ## To start, every square can be any digit; then assign values from the grid.
     values = dict((s, digits) for s in range(len(squares)))
-    for s, d in grid_values(grid).items():
+    for s, d in enumerate(grid_values(grid)):
         if d in digits and not assign(values, s, d):
             return False  ## (Fail if we can't assign d to square s.)
     return values
@@ -110,7 +110,7 @@ def grid_values(grid):
     "Convert grid into a dict of {square: char} with '0' or '.' for empties."
     chars = [c for c in grid if c in digits or c in "0."]
     assert len(chars) == 81
-    return dict(zip(range(len(squares)), chars))
+    return chars
 
 
 ################ Constraint Propagation ################
@@ -155,7 +155,7 @@ def eliminate(values, s, d):
 
 def display(values):
     "Display these values as a 2-D grid."
-    width = 2 + max(len(values[s]) for s in values)
+    width = 2 + max([len(str(s)) for s in values])
     line = "+".join(["-" * (width * 3)] * 3)
     for r in [0, 9, 18, 27, 36, 45, 54, 63, 72]:
         print(
