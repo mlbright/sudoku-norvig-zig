@@ -270,14 +270,14 @@ def random_puzzle(N=17):
 if __name__ == "__main__":
     test()
     solve_all(from_file("puzzles/one.txt"), "one", None)
-    solve_all(from_file("puzzles/three.txt"), "three", 0.05)
-    # solve_all([random_puzzle() for _ in range(99)], "random", 100.0)
+    # solve_all(from_file("puzzles/three.txt"), "three", 0.05)
     # solve_all(from_file("puzzles/easy50.txt"), "easy", None)
     # solve_all(from_file("puzzles/top95.txt"), "hard", 0.05)
     # solve_all(from_file("puzzles/hardest.txt"), "hardest", None)
     # solve_all(from_file("puzzles/hardest20.txt"), "hardest20", None)
     # solve_all(from_file("puzzles/hardest20x50.txt"), "hardest20x50", 0.05)
     # solve_all(from_file("puzzles/topn87.txt"), "topn87", 0.05)
+    # solve_all([random_puzzle() for _ in range(100)], "random", 0.003)
 
 # Reference:
 # https://norvig.com/sudoku.html
