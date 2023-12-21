@@ -279,6 +279,7 @@ if __name__ == "__main__":
     # solve_all(from_file("puzzles/topn87.txt"), "topn87", 0.05)
     # solve_all([random_puzzle() for _ in range(100)], "random", 0.003)
 
+
 # Reference:
 # https://norvig.com/sudoku.html
 # References from ^:
