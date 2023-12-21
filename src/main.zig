@@ -41,6 +41,8 @@ pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
+    try solveAll(allocator, "puzzles/one.txt", 0.04);
+    try solveAll(allocator, "puzzles/three.txt", 0.04);
     try solveAll(allocator, "puzzles/all.txt", 0.04);
     try solveAll(allocator, "puzzles/easy50.txt", 0.05);
     try solveAll(allocator, "puzzles/top95.txt", 0.05);

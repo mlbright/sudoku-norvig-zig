@@ -235,7 +235,7 @@ def solve_all(grids, name="", showif=None):
 
     times, results = zip(*[time_solve(grid) for grid in grids])
     N = len(grids)
-    if N >= 1:
+    if N > 0:
         print(
             "Solved %d of %d %s puzzles (avg %.4f secs (%.2f Hz), max %.4f secs)."
             % (sum(results), N, name, sum(times) / N, N / sum(times), max(times))
@@ -267,29 +267,22 @@ def random_puzzle(N=17):
     return random_puzzle(N)  ## Give up and make a new puzzle
 
 
-grid1 = (
-    "..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3.."
-)
-grid2 = (
-    "4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......"
-)
-hard1 = (
-    ".....6....59.....82....8....45........3........6..3.54...325..6.................."
-)
-
-
 if __name__ == "__main__":
     test()
-    solve_all([random_puzzle() for _ in range(99)], "random", 100.0)
-    solve_all(from_file("puzzles/easy50.txt"), "easy", None)
-    solve_all(from_file("puzzles/top95.txt"), "hard", 0.05)
-    solve_all(from_file("puzzles/hardest.txt"), "hardest", None)
-    solve_all(from_file("puzzles/hardest20.txt"), "hardest20", None)
-    solve_all(from_file("puzzles/hardest20x50.txt"), "hardest20x50", 0.05)
-    solve_all(from_file("puzzles/topn87.txt"), "topn87", 0.05)
+    solve_all(from_file("puzzles/one.txt"), "one", None)
+    solve_all(from_file("puzzles/three.txt"), "three", 0.05)
+    # solve_all([random_puzzle() for _ in range(99)], "random", 100.0)
+    # solve_all(from_file("puzzles/easy50.txt"), "easy", None)
+    # solve_all(from_file("puzzles/top95.txt"), "hard", 0.05)
+    # solve_all(from_file("puzzles/hardest.txt"), "hardest", None)
+    # solve_all(from_file("puzzles/hardest20.txt"), "hardest20", None)
+    # solve_all(from_file("puzzles/hardest20x50.txt"), "hardest20x50", 0.05)
+    # solve_all(from_file("puzzles/topn87.txt"), "topn87", 0.05)
 
-## References used:
-## http://www.scanraid.com/BasicStrategies.htm
-## http://www.sudokudragon.com/sudokustrategy.htm
-## http://www.krazydad.com/blog/2005/09/29/an-index-of-sudoku-strategies/
-## http://www2.warwick.ac.uk/fac/sci/moac/currentstudents/peter_cock/python/sudoku/
+# Reference:
+# https://norvig.com/sudoku.html
+# References from ^:
+# http://www.scanraid.com/BasicStrategies.htm
+# http://www.sudokudragon.com/sudokustrategy.htm
+# http://www.krazydad.com/blog/2005/09/29/an-index-of-sudoku-strategies/
+# http://www2.warwick.ac.uk/fac/sci/moac/currentstudents/peter_cock/python/sudoku/
