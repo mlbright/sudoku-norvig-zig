@@ -2,50 +2,47 @@
 
 ## See http://norvig.com/sudoku.html
 
-## Throughout this program we have:
-##   r is a row,    e.g. 'A'
-##   c is a column, e.g. '3'
-##   s is a square, e.g. 'A3'
-##   d is a digit,  e.g. '9'
-##   u is a unit,   e.g. ['A1','B1','C1','D1','E1','F1','G1','H1','I1']
-##   grid is a grid,e.g. 81 non-blank chars, e.g. starting with '.18...7...
-##   values is a dict of possible values, e.g. {'A1':'12349', 'A2':'8', ...}
-
-
-def cross(A, B):
-    "Cross product of elements in A and elements in B."
-    return [a + b for a in A for b in B]
-
-
 digits = "123456789"
-rows = "ABCDEFGHI"
-cols = digits
-squares = cross(rows, cols)
-isquares = dict([(name, index) for (index, name) in enumerate(squares)])
-iunitlist = (
-    [cross(rows, c) for c in cols]
-    + [cross(r, cols) for r in rows]
-    + [cross(rs, cs) for rs in ("ABC", "DEF", "GHI") for cs in ("123", "456", "789")]
-)
-unitlist = []
-for unit in iunitlist:
-    simplified_unit = []
-    for s in unit:
-        simplified_unit.append(isquares[s])
-    unitlist.append(simplified_unit)
+
+
+def horizontal():
+    units = []
+    for i in range(9):
+        units.append([(i * 9) + j for j in range(9)])
+    return units
+
+
+def vertical():
+    units = []
+    for i in range(9):
+        units.append([i + (j * 9) for j in range(9)])
+    return units
+
+
+def box_units():
+    units = []
+    for r in [[0, 1, 2], [3, 4, 5], [6, 7, 8]]:
+        for c in [[0, 1, 2], [3, 4, 5], [6, 7, 8]]:
+            unit = [(i + 9 * j) for i in r for j in c]
+            units.append(sorted(unit))
+
+    return units
+
+
+unitlist = horizontal()
+unitlist.extend(vertical())
+unitlist.extend(box_units())
 
 units = []
-for i in range(len(squares)):
+for i in range(81):
     group = []
     for unit in unitlist:
-        for j in unit:
-            if i == j:
-                group.append(unit[:])
-                break
+        if i in unit:
+            group.append(unit[:])
     units.append(group)
 
 peers = []
-for i in range(len(squares)):
+for i in range(81):
     peer_set = set()
     for unit in units[i]:
         for s in unit:
@@ -58,13 +55,12 @@ for i in range(len(squares)):
 
 def test():
     "A set of tests that must pass."
-    assert len(squares) == 81
     assert len(unitlist) == 27
-    assert all(len(units[s]) == 3 for s in range(len(squares)))
-    assert all(len(peers[s]) == 20 for s in range(len(squares)))
+    assert all(len(units[s]) == 3 for s in range(81))
+    assert all(len(peers[s]) == 20 for s in range(81))
     assert units[19] == [
-        [1, 10, 19, 28, 37, 46, 55, 64, 73],
         [18, 19, 20, 21, 22, 23, 24, 25, 26],
+        [1, 10, 19, 28, 37, 46, 55, 64, 73],
         [0, 1, 2, 9, 10, 11, 18, 19, 20],
     ]
     assert peers[19] == {
@@ -96,10 +92,10 @@ def test():
 
 
 def parse_grid(grid):
-    """Convert grid to a dict of possible values, {square: digits}, or
+    """Convert grid to a dict of possible values, [square: digits], or
     return False if a contradiction is detected."""
     ## To start, every square can be any digit; then assign values from the grid.
-    values = dict((s, digits) for s in range(len(squares)))
+    values = dict((s, digits) for s in range(81))
     for s, d in enumerate(grid_values(grid)):
         if d in digits and not assign(values, s, d):
             return False  ## (Fail if we can't assign d to square s.)
@@ -180,10 +176,10 @@ def search(values):
     "Using depth-first search and propagation, try all possible values."
     if values is False:
         return False  ## Failed earlier
-    if all(len(values[s]) == 1 for s in range(len(squares))):
+    if all(len(values[s]) == 1 for s in range(81)):
         return values  ## Solved!
     ## Chose the unfilled square s with the fewest possibilities
-    n, s = min((len(values[s]), s) for s in range(len(squares)) if len(values[s]) > 1)
+    n, s = min((len(values[s]), s) for s in range(81) if len(values[s]) > 1)
     return some(search(assign(values.copy(), s, d)) for d in values[s])
 
 
@@ -255,24 +251,22 @@ def random_puzzle(N=17):
     """Make a random puzzle with N or more assignments. Restart on contradictions.
     Note the resulting puzzle is not guaranteed to be solvable, but empirically
     about 99.8% of them are solvable. Some have multiple solutions."""
-    values = dict((s, digits) for s in range(len(squares)))
-    for s in shuffled(range(len(squares))):
+    values = dict((s, digits) for s in range(81))
+    for s in shuffled(range(81)):
         if not assign(values, s, random.choice(values[s])):
             break
-        ds = [values[s] for s in range(len(squares)) if len(values[s]) == 1]
+        ds = [values[s] for s in range(81) if len(values[s]) == 1]
         if len(ds) >= N and len(set(ds)) >= 8:
-            return "".join(
-                values[s] if len(values[s]) == 1 else "." for s in range(len(squares))
-            )
+            return "".join(values[s] if len(values[s]) == 1 else "." for s in range(81))
     return random_puzzle(N)  ## Give up and make a new puzzle
 
 
 if __name__ == "__main__":
     test()
     solve_all(from_file("puzzles/one.txt"), "one", None)
-    # solve_all(from_file("puzzles/three.txt"), "three", 0.05)
-    # solve_all(from_file("puzzles/easy50.txt"), "easy", None)
-    # solve_all(from_file("puzzles/top95.txt"), "hard", 0.05)
+    solve_all(from_file("puzzles/three.txt"), "three", 0.05)
+    solve_all(from_file("puzzles/easy50.txt"), "easy", None)
+    solve_all(from_file("puzzles/top95.txt"), "hard", 0.05)
     # solve_all(from_file("puzzles/hardest.txt"), "hardest", None)
     # solve_all(from_file("puzzles/hardest20.txt"), "hardest20", None)
     # solve_all(from_file("puzzles/hardest20x50.txt"), "hardest20x50", 0.05)
