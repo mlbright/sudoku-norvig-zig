@@ -95,7 +95,7 @@ def parse_grid(grid):
     """Convert grid to a dict of possible values, [square: digits], or
     return False if a contradiction is detected."""
     ## To start, every square can be any digit; then assign values from the grid.
-    values = dict((s, digits) for s in range(81))
+    values = [digits for s in range(81)]
     for s, d in enumerate(grid_values(grid)):
         if d in digits and not assign(values, s, d):
             return False  ## (Fail if we can't assign d to square s.)
@@ -251,7 +251,7 @@ def random_puzzle(N=17):
     """Make a random puzzle with N or more assignments. Restart on contradictions.
     Note the resulting puzzle is not guaranteed to be solvable, but empirically
     about 99.8% of them are solvable. Some have multiple solutions."""
-    values = dict((s, digits) for s in range(81))
+    values = [digits for s in range(81)]
     for s in shuffled(range(81)):
         if not assign(values, s, random.choice(values[s])):
             break
