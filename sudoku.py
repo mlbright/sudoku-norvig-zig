@@ -92,7 +92,7 @@ def test():
 
 
 def parse_grid(grid):
-    """Convert grid to a dict of possible values, [square: digits], or
+    """Convert grid to a list of possible values, [square: digits], or
     return False if a contradiction is detected."""
     ## To start, every square can be any digit; then assign values from the grid.
     values = [digits for s in range(81)]
@@ -103,7 +103,7 @@ def parse_grid(grid):
 
 
 def grid_values(grid):
-    "Convert grid into a dict of {square: char} with '0' or '.' for empties."
+    "Convert grid into a list of [square: char] with '0' or '.' for empties."
     chars = [c for c in grid if c in digits or c in "0."]
     assert len(chars) == 81
     return chars
