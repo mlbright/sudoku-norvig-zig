@@ -1,6 +1,14 @@
-## Solve Every Sudoku Puzzle
+# Solve Every Sudoku Puzzle
 
-## See http://norvig.com/sudoku.html
+# See http://norvig.com/sudoku.html
+
+# Reference:
+# https://norvig.com/sudoku.html
+# References from ^:
+# http://www.scanraid.com/BasicStrategies.htm
+# http://www.sudokudragon.com/sudokustrategy.htm
+# http://www.krazydad.com/blog/2005/09/29/an-index-of-sudoku-strategies/
+# http://www2.warwick.ac.uk/fac/sci/moac/currentstudents/peter_cock/python/sudoku/
 
 digits = "123456789"
 
@@ -8,14 +16,14 @@ digits = "123456789"
 def horizontal():
     units = []
     for i in range(9):
-        units.append([(i * 9) + j for j in range(9)])
+        units.append(set([(i * 9) + j for j in range(9)]))
     return units
 
 
 def vertical():
     units = []
     for i in range(9):
-        units.append([i + (j * 9) for j in range(9)])
+        units.append(set([i + (j * 9) for j in range(9)]))
     return units
 
 
@@ -23,8 +31,8 @@ def box_units():
     units = []
     for r in [[0, 1, 2], [3, 4, 5], [6, 7, 8]]:
         for c in [[0, 1, 2], [3, 4, 5], [6, 7, 8]]:
-            unit = [(i + 9 * j) for i in r for j in c]
-            units.append(sorted(unit))
+            unit = set([(i + 9 * j) for i in r for j in c])
+            units.append(unit)
 
     return units
 
@@ -38,7 +46,7 @@ for i in range(81):
     group = []
     for unit in unitlist:
         if i in unit:
-            group.append(unit[:])
+            group.append(unit.copy())
     units.append(group)
 
 peers = []
@@ -59,9 +67,9 @@ def test():
     assert all(len(units[s]) == 3 for s in range(81))
     assert all(len(peers[s]) == 20 for s in range(81))
     assert units[19] == [
-        [18, 19, 20, 21, 22, 23, 24, 25, 26],
-        [1, 10, 19, 28, 37, 46, 55, 64, 73],
-        [0, 1, 2, 9, 10, 11, 18, 19, 20],
+        set([18, 19, 20, 21, 22, 23, 24, 25, 26]),
+        set([1, 10, 19, 28, 37, 46, 55, 64, 73]),
+        set([0, 1, 2, 9, 10, 11, 18, 19, 20]),
     ]
     assert peers[19] == {
         0,
@@ -272,12 +280,3 @@ if __name__ == "__main__":
     solve_all(from_file("puzzles/hardest20x50.txt"), "hardest20x50", 0.05)
     solve_all(from_file("puzzles/topn87.txt"), "topn87", 0.05)
     solve_all([random_puzzle() for _ in range(100)], "random", 0.05)
-
-
-# Reference:
-# https://norvig.com/sudoku.html
-# References from ^:
-# http://www.scanraid.com/BasicStrategies.htm
-# http://www.sudokudragon.com/sudokustrategy.htm
-# http://www.krazydad.com/blog/2005/09/29/an-index-of-sudoku-strategies/
-# http://www2.warwick.ac.uk/fac/sci/moac/currentstudents/peter_cock/python/sudoku/
