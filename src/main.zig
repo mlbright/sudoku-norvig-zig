@@ -20,6 +20,20 @@ pub fn fromFile(allocator: std.mem.Allocator, filename: []const u8) ![][]const u
     return try lines.toOwnedSlice();
 }
 
+pub fn timeSolve(allocator: std.mem.Allocator, grid: []const u8) !u64 {
+    _ = allocator;
+    std.debug.print("{s}\n", .{grid});
+    for (0..grid.len) |c| {
+        std.debug.print("{c}\n", .{grid[c]});
+    }
+    const start = try std.time.Instant.now();
+    std.time.sleep(1000000);
+    const end = try std.time.Instant.now();
+    const duration = std.time.Instant.since(end, start);
+    std.debug.print("elapsed time: {d}\n", .{duration});
+    return duration;
+}
+
 pub fn solveAll(allocator: std.mem.Allocator, filename: []const u8, show_if: ?f64) !void {
     _ = show_if;
 
@@ -27,10 +41,8 @@ pub fn solveAll(allocator: std.mem.Allocator, filename: []const u8, show_if: ?f6
     defer allocator.free(grids);
     std.debug.print("{d}\n", .{grids.len});
     for (grids) |grid| {
-        std.debug.print("{s}\n", .{grid});
-        for (0..grid.len) |c| {
-            std.debug.print("{c}\n", .{grid[c]});
-        }
+        const elapsed = try timeSolve(allocator, grid);
+        _ = elapsed;
     }
     for (grids) |grid| {
         allocator.free(grid);
