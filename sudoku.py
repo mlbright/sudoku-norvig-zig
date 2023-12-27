@@ -104,7 +104,7 @@ def parse_grid(grid):
     return False if a contradiction is detected."""
     ## To start, every square can be any digit; then assign values from the grid.
     values = [digits for s in range(81)]
-    for s, d in enumerate(grid_values(grid)):
+    for s, d in enumerate(grid):
         if d in digits and not assign(values, s, d):
             return False  ## (Fail if we can't assign d to square s.)
     return values
@@ -226,16 +226,17 @@ def solve_all(grids, name="", showif=None):
     When showif is None, don't display any puzzles."""
 
     def time_solve(grid):
+        puzzle = grid_values(grid)
         start = time.time()
-        values = solve(grid)
+        solution = solve(puzzle)
         t = time.time() - start
-        ## Display puzzles that take long enough
+        # Display puzzles that take long enough
         if showif is not None and t > showif:
-            display(grid_values(grid))
-            if values:
-                display(values)
+            display(puzzle)
+            if solution:
+                display(solution)
             print("(%.5f seconds)\n" % t)
-        return (t, solved(values))
+        return (t, solved(solution))
 
     times, results = zip(*[time_solve(grid) for grid in grids])
     N = len(grids)
