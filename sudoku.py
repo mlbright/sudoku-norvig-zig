@@ -173,10 +173,6 @@ def display(values):
     print()
 
 
-def display_as_str(values):
-    print("solution: ", "".join(values))
-
-
 ################ Search ################
 
 
@@ -230,6 +226,7 @@ def solve_all(grids, name="", showif=None):
     When showif is None, don't display any puzzles."""
 
     def time_solve(grid):
+        print("puzzle:  ", grid)
         puzzle = grid_values(grid)
         start = time.time()
         solution = solve(puzzle)
@@ -239,8 +236,9 @@ def solve_all(grids, name="", showif=None):
             display(puzzle)
             if solution:
                 display(solution)
-                display_as_str(solution)
+                print("solution:", "".join(solution))
             print("(%.5f seconds)\n" % t)
+
         return (t, solved(solution))
 
     times, results = zip(*[time_solve(grid) for grid in grids])

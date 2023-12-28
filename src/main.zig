@@ -24,7 +24,7 @@ pub fn timeSolve(allocator: std.mem.Allocator, grid: []const u8, show_if: ?f64) 
     _ = show_if;
 
     _ = allocator;
-    std.debug.print("{s}\n", .{grid});
+    std.debug.print("puzzle: {s}\n", .{grid});
     const start = try std.time.Instant.now();
     for (0..grid.len) |c| {
         std.debug.print("{c}\n", .{grid[c]});
@@ -42,13 +42,9 @@ pub fn timeSolve(allocator: std.mem.Allocator, grid: []const u8, show_if: ?f64) 
     return duration;
 }
 
-pub fn displayGrid(grid: []const u8) void {
+pub fn displayGrid(grid: []const u9) void {
     _ = grid;
 
-    const width = 3;
-    _ = width;
-    const line = "---------+---------+---------";
-    _ = line;
 }
 
 pub fn solveAll(allocator: std.mem.Allocator, filename: []const u8, show_if: ?f64) !void {
