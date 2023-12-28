@@ -38,14 +38,17 @@ pub fn timeSolve(allocator: std.mem.Allocator, grid: []const u8, show_if: ?f64) 
     //     _ = threshold;
     //     std.debug.print("elapsed time: {d}\n", .{duration});
     // }
-    display(grid);
+    displayGrid(grid);
     return duration;
 }
 
-pub fn display(grid: []const u8) void {
+pub fn displayGrid(grid: []const u8) void {
     _ = grid;
 
-    const width =     
+    const width = 3;
+    _ = width;
+    const line = "---------+---------+---------";
+    _ = line;
 }
 
 pub fn solveAll(allocator: std.mem.Allocator, filename: []const u8, show_if: ?f64) !void {

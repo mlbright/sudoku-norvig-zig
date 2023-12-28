@@ -173,6 +173,10 @@ def display(values):
     print()
 
 
+def display_as_str(values):
+    print("solution: ", "".join(values))
+
+
 ################ Search ################
 
 
@@ -235,6 +239,7 @@ def solve_all(grids, name="", showif=None):
             display(puzzle)
             if solution:
                 display(solution)
+                display_as_str(solution)
             print("(%.5f seconds)\n" % t)
         return (t, solved(solution))
 
@@ -272,12 +277,12 @@ def random_puzzle(N=17):
 
 if __name__ == "__main__":
     test()
-    solve_all(from_file("puzzles/one.txt"), "one", None)
-    solve_all(from_file("puzzles/three.txt"), "three", 0.05)
-    solve_all(from_file("puzzles/easy50.txt"), "easy", None)
-    solve_all(from_file("puzzles/top95.txt"), "hard", 0.05)
-    solve_all(from_file("puzzles/hardest.txt"), "hardest", None)
-    solve_all(from_file("puzzles/hardest20.txt"), "hardest20", None)
-    solve_all(from_file("puzzles/hardest20x50.txt"), "hardest20x50", 0.05)
-    solve_all(from_file("puzzles/topn87.txt"), "topn87", 0.05)
-    solve_all([random_puzzle() for _ in range(100)], "random", 0.05)
+    solve_all(from_file("puzzles/one.txt"), "one", 0.00)
+    solve_all(from_file("puzzles/three.txt"), "three", 0.00)
+    solve_all(from_file("puzzles/easy50.txt"), "easy", 0.00)
+    solve_all(from_file("puzzles/top95.txt"), "hard", 0.00)
+    solve_all(from_file("puzzles/hardest.txt"), "hardest", 0.00)
+    solve_all(from_file("puzzles/hardest20.txt"), "hardest20", 0.00)
+    solve_all(from_file("puzzles/hardest20x50.txt"), "hardest20x50", 0.00)
+    solve_all(from_file("puzzles/topn87.txt"), "topn87", 0.00)
+    # solve_all([random_puzzle() for _ in range(100)], "random", 0.00)
