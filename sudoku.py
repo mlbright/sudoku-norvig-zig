@@ -158,9 +158,6 @@ def display(values):
     print()
 
 
-################ Search ################
-
-
 def solve(grid, values):
     # To start, every square can be any digit; then assign values from the grid.
     for s, d in enumerate(grid):
@@ -214,8 +211,9 @@ def solve_all(grids, name="", showif=None):
         print()
         grid_list = [c for c in grid if c in digits or c in "0."]
         assert len(grid_list) == 81
+        puzzle = starting_puzzle[:]
         start = time.time()
-        solution = solve(grid_list, starting_puzzle[:])
+        solution = solve(grid_list, puzzle)
         t = time.time() - start
         # Display puzzles that take long enough
         if showif is not None and t > showif:
