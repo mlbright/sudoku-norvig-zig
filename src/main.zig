@@ -66,14 +66,14 @@ pub fn displayGrid(grid: [81]std.bit_set.StaticBitSet(9)) void {
 
 pub fn solveAll(allocator: std.mem.Allocator, filename: []const u8) !void {
     const grids = try fromFile(allocator, filename);
-    defer allocator.free(grids);
     std.debug.print("{d}\n", .{grids.len});
     for (grids) |grid| {
+        std.debug.print("({d:.5} seconds)\n", .{2.12345});
+        // @as(f32, @floatFromInt(partial)) / @as(f32, @floatFromInt(total))
+        std.debug.print("({d:.5} seconds)\n", .{ @as(f64, @floatFromInt(1_123_344_123))/1_000_000_000.00});
         const elapsed = try timeSolve(allocator, grid);
-        _ = elapsed;
-    }
-    for (grids) |grid| {
-        allocator.free(grid);
+        // @as(f32, @floatFromInt(partial)) / @as(f32, @floatFromInt(total))
+        std.debug.print("({d:.5} seconds)\n", .{ @as(f64, @floatFromInt(elapsed))/1_000_000_000.00});
     }
 }
 
