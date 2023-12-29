@@ -20,20 +20,22 @@ pub fn fromFile(allocator: std.mem.Allocator, filename: []const u8) ![][]const u
     return try lines.toOwnedSlice();
 }
 
-pub fn puzzleInit(allocator: std.mem.Allocator, grid: []const u8) ![81]u9 {
+pub fn puzzleInit(allocator: std.mem.Allocator, grid: []const u8, puzzle: *[81]u9) !void {
+    _ = puzzle;
+
+    _ = allocator;
     _ = grid;
-    const puzzle = try allocator.alloc(u9, 81);
-    return puzzle;
 }
 
-pub fn solve(allocator: std.mem.Allocator, puzzle: *[81]u9) ?[81]u9 {
+pub fn solve(allocator: std.mem.Allocator, puzzle: *[81]u9) ![81]u9 {
     _ = allocator;
     _ = puzzle;
 }
 
 pub fn timeSolve(allocator: std.mem.Allocator, grid: []const u8) !u64 {
     std.debug.print("puzzle:   {s}\n", .{grid});
-    const puzzle = puzzleInit(allocator, grid);
+    var puzzle = [_]u9{0} ** 81;
+    try puzzleInit(allocator, grid, &puzzle);
     const start = try std.time.Instant.now();
     // for (0..grid.len) |c| {
     //     std.debug.print("{c}\n", .{grid[c]});

@@ -4,6 +4,7 @@
 
 # Reference:
 # https://norvig.com/sudoku.html
+
 # References from ^:
 # http://www.scanraid.com/BasicStrategies.htm
 # http://www.sudokudragon.com/sudokustrategy.htm
@@ -11,6 +12,7 @@
 # http://www2.warwick.ac.uk/fac/sci/moac/currentstudents/peter_cock/python/sudoku/
 
 digits = "123456789"
+starting_puzzle = [digits for s in range(81)]
 
 
 def horizontal():
@@ -103,7 +105,7 @@ def parse_grid(grid):
     """Convert grid to a list of possible values, [square: digits], or
     return False if a contradiction is detected."""
     ## To start, every square can be any digit; then assign values from the grid.
-    values = [digits for s in range(81)]
+    values = starting_puzzle[:]
     for s, d in enumerate(grid):
         if d in digits and not assign(values, s, d):
             return False  ## (Fail if we can't assign d to square s.)
@@ -274,6 +276,7 @@ def random_puzzle(N=17):
 
 
 if __name__ == "__main__":
+
     test()
     solve_all(from_file("puzzles/one.txt"), "one", 0.00)
     solve_all(from_file("puzzles/three.txt"), "three", 0.00)
