@@ -32,15 +32,15 @@ const Contradiction = error{
     NoRemainingCandidateSquares,
 };
 
-pub fn solve(allocator: std.mem.Allocator, puzzle: *[81]std.bit_set.StaticBitSet(9)) !*[81]std.bit_set.StaticBitSet(9) {
-    _ = allocator;
+pub fn solve(puzzle: *[81]std.bit_set.StaticBitSet(9)) bool {
     _ = puzzle;
     // for (0..grid.len) |c| {
     //     std.debug.print("{c}\n", .{grid[c]});
     // }
     std.time.sleep(1200000);
-    var t: [81]std.bit_set.StaticBitSet(9) = undefined;
-    return &t;
+    const t: [81]std.bit_set.StaticBitSet(9) = undefined;
+    _ = t;
+    return false;
     // return Contradiction.AlreadyEliminated;
 }
 

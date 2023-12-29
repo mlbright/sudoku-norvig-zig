@@ -11,6 +11,8 @@
 # http://www.krazydad.com/blog/2005/09/29/an-index-of-sudoku-strategies/
 # http://www2.warwick.ac.uk/fac/sci/moac/currentstudents/peter_cock/python/sudoku/
 
+import time, random
+
 digits = "123456789"
 starting_puzzle = [digits for s in range(81)]
 
@@ -65,6 +67,8 @@ for i in range(81):
 
 def test():
     "A set of tests that must pass."
+    assert len(units) == 81
+    assert len(peers) == 81
     assert len(unitlist) == 27
     assert all(len(units[s]) == 3 for s in range(81))
     assert all(len(peers[s]) == 20 for s in range(81))
@@ -217,11 +221,6 @@ def shuffled(seq):
     return seq
 
 
-################ System test ################
-
-import time, random
-
-
 def solve_all(grids, name="", showif=None):
     """Attempt to solve a sequence of grids. Report results.
     When showif is a number of seconds, display puzzles that take longer.
@@ -273,6 +272,14 @@ def random_puzzle(N=17):
         if len(ds) >= N and len(set(ds)) >= 8:
             return "".join(values[s] if len(values[s]) == 1 else "." for s in range(81))
     return random_puzzle(N)  # Give up and make a new puzzle
+
+
+def units_and_peers():
+    import json
+
+    unitlist = [[list(u) for u in units[i]] for i in range(0, 81)]
+    peerlist = [list(peers[i]) for i in range(0, 81)]
+    print(json.dumps({"units": unitlist, "peers": peerlist}))
 
 
 if __name__ == "__main__":
