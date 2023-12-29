@@ -10,7 +10,6 @@ pub fn readInputFile(allocator: std.mem.Allocator, filename: []const u8) ![]cons
 
 pub fn fromFile(allocator: std.mem.Allocator, filename: []const u8) ![][]const u8 {
     const content = try readInputFile(allocator, filename);
-    defer allocator.free(content);
     var lines = std.ArrayList([]const u8).init(allocator);
     var readIter = std.mem.tokenizeScalar(u8, content, '\n');
     while (readIter.next()) |line| {
@@ -20,21 +19,28 @@ pub fn fromFile(allocator: std.mem.Allocator, filename: []const u8) ![][]const u
     return try lines.toOwnedSlice();
 }
 
-pub fn puzzleInit(allocator: std.mem.Allocator, grid: []const u8, puzzle: *[81]u9) !void {
+pub fn puzzleInit(allocator: std.mem.Allocator, grid: []const u8, puzzle: *[81]std.bit_set.StaticBitSet(9)) !void {
     _ = puzzle;
 
     _ = allocator;
     _ = grid;
 }
 
-pub fn solve(allocator: std.mem.Allocator, puzzle: *[81]u9) ![81]u9 {
+const Contradiction = error{
+    AlreadyEliminated,
+    RemovedLastValue,
+    NoRemainingCandidateSquares,
+};
+
+pub fn solve(allocator: std.mem.Allocator, puzzle: *[81]std.bit_set.StaticBitSet(9)) ![81]std.bit_set.StaticBitSet(9) {
     _ = allocator;
     _ = puzzle;
+    return Contradiction.AlreadyEliminated;
 }
 
 pub fn timeSolve(allocator: std.mem.Allocator, grid: []const u8) !u64 {
     std.debug.print("puzzle:   {s}\n", .{grid});
-    var puzzle = [_]u9{0} ** 81;
+    var puzzle: [81]std.bit_set.StaticBitSet(9) = undefined;
     try puzzleInit(allocator, grid, &puzzle);
     const start = try std.time.Instant.now();
     // for (0..grid.len) |c| {
@@ -48,7 +54,7 @@ pub fn timeSolve(allocator: std.mem.Allocator, grid: []const u8) !u64 {
     return duration;
 }
 
-pub fn displayGrid(grid: [81]u9) void {
+pub fn displayGrid(grid: [81]std.bit_set.StaticBitSet(9)) void {
     for (grid) |c| {
         _ = c;
 
@@ -72,9 +78,10 @@ pub fn solveAll(allocator: std.mem.Allocator, filename: []const u8) !void {
 }
 
 pub fn main() !void {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    defer _ = gpa.deinit();
-    const allocator = gpa.allocator();
+    var arena = std.heap.ArenaAllocator.init(std.heap.c_allocator);
+    defer arena.deinit();
+    const allocator = arena.allocator();
+
     try solveAll(allocator, "puzzles/one.txt");
     try solveAll(allocator, "puzzles/three.txt");
     try solveAll(allocator, "puzzles/all.txt");
