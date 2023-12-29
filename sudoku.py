@@ -99,7 +99,7 @@ def test():
         64,
         73,
     }
-    print("All tests pass.")
+    print("All tests pass.\n")
 
 
 ################ Parse a Grid ################
@@ -108,7 +108,7 @@ def test():
 def parse_grid(grid):
     """Convert grid to a list of possible values, [square: digits], or
     return False if a contradiction is detected."""
-    ## To start, every square can be any digit; then assign values from the grid.
+    # To start, every square can be any digit; then assign values from the grid.
     values = starting_puzzle[:]
     for s, d in enumerate(grid):
         if d in digits and not assign(values, s, d):
@@ -193,7 +193,7 @@ def search(values):
     if all(len(values[s]) == 1 for s in range(81)):
         return values  ## Solved!
     ## Chose the unfilled square s with the fewest possibilities
-    n, s = min((len(values[s]), s) for s in range(81) if len(values[s]) > 1)
+    _, s = min((len(values[s]), s) for s in range(81) if len(values[s]) > 1)
     return some(search(assign(values.copy(), s, d)) for d in values[s])
 
 
@@ -228,6 +228,7 @@ def solve_all(grids, name="", showif=None):
 
     def time_solve(grid):
         print("puzzle:  ", grid)
+        print()
         puzzle = puzzle_init(grid)
         start = time.time()
         solution = solve(puzzle)
@@ -238,7 +239,7 @@ def solve_all(grids, name="", showif=None):
             if solution:
                 display(solution)
                 print("solution:", "".join(solution))
-            print("(%.5f seconds)\n" % t)
+            print("(%.5f seconds)" % t)
 
         return (t, solved(solution))
 
@@ -246,7 +247,7 @@ def solve_all(grids, name="", showif=None):
     N = len(grids)
     if N > 0:
         print(
-            "Solved %d of %d %s puzzles (avg %.4f secs (%.2f Hz), max %.4f secs)."
+            "Solved %d of %d %s puzzles (avg %.4f secs (%.2f Hz), max %.4f secs).\n"
             % (sum(results), N, name, sum(times) / N, N / sum(times), max(times))
         )
 

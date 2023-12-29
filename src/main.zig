@@ -26,22 +26,23 @@ pub fn puzzleInit(allocator: std.mem.Allocator, grid: []const u8, puzzle: *[81]s
     _ = grid;
 }
 
-const Contradiction = error{
-    AlreadyEliminated,
-    RemovedLastValue,
-    NoRemainingCandidateSquares,
-};
-
-pub fn solve(puzzle: *[81]std.bit_set.StaticBitSet(9)) bool {
+pub fn solve(allocator: std.mem.Allocator, puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
+    _ = allocator;
     _ = puzzle;
     // for (0..grid.len) |c| {
     //     std.debug.print("{c}\n", .{grid[c]});
     // }
-    std.time.sleep(1200000);
+    std.time.sleep(try getRandomCount());
     const t: [81]std.bit_set.StaticBitSet(9) = undefined;
     _ = t;
     return false;
-    // return Contradiction.AlreadyEliminated;
+}
+
+pub fn search(allocator: std.mem.Allocator, puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
+    _ = allocator;
+    _ = puzzle;
+
+    return false;
 }
 
 pub fn timeSolve(allocator: std.mem.Allocator, grid: []const u8) !u64 {
@@ -49,14 +50,14 @@ pub fn timeSolve(allocator: std.mem.Allocator, grid: []const u8) !u64 {
     var puzzle: [81]std.bit_set.StaticBitSet(9) = undefined;
     try puzzleInit(allocator, grid, &puzzle);
     const start = try std.time.Instant.now();
-    const solution = try solve(allocator, &puzzle);
+    _ = try solve(allocator, &puzzle);
     const end = try std.time.Instant.now();
     const duration = std.time.Instant.since(end, start);
-    displayGrid(solution.*);
+    displayGrid(&puzzle);
     return duration;
 }
 
-pub fn displayGrid(grid: [81]std.bit_set.StaticBitSet(9)) void {
+pub fn displayGrid(grid: *[81]std.bit_set.StaticBitSet(9)) void {
     for (grid) |c| {
         _ = c;
 
@@ -68,10 +69,8 @@ pub fn displayGrid(grid: [81]std.bit_set.StaticBitSet(9)) void {
 
 pub fn solveAll(allocator: std.mem.Allocator, filename: []const u8) !void {
     const grids = try fromFile(allocator, filename);
-    std.debug.print("{d}\n", .{grids.len});
     for (grids) |grid| {
         const elapsed = try timeSolve(allocator, grid);
-        // @as(f32, @floatFromInt(partial)) / @as(f32, @floatFromInt(total))
         std.debug.print("({d:.5} seconds)\n", .{@as(f64, @floatFromInt(elapsed)) / 1_000_000_000.00});
     }
 }
@@ -90,4 +89,11 @@ pub fn main() !void {
     try solveAll(allocator, "puzzles/hardest20.txt");
     try solveAll(allocator, "puzzles/hardest20x50.txt");
     try solveAll(allocator, "puzzles/topn87.txt");
+}
+
+fn getRandomCount() !u64 {
+    var seed: u64 = undefined;
+    try std.os.getrandom(std.mem.asBytes(&seed));
+    var random = std.rand.DefaultPrng.init(seed);
+    return random.random().uintAtMost(u64, 1_200_000);
 }
