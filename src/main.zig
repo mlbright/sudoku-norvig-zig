@@ -20,15 +20,11 @@ pub fn fromFile(allocator: std.mem.Allocator, filename: []const u8) ![][]const u
 }
 
 pub fn solve(allocator: std.mem.Allocator, grid: []const u8, puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
-    _ = puzzle;
-    _ = allocator;
     for (0..grid.len) |c| {
         std.debug.print("{c}\n", .{grid[c]});
     }
     std.time.sleep(try getRandomCount());
-    const t: [81]std.bit_set.StaticBitSet(9) = undefined;
-    _ = t;
-    return false;
+    return search(allocator, puzzle);
 }
 
 pub fn search(allocator: std.mem.Allocator, puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
