@@ -161,9 +161,8 @@ def display(values):
 ################ Search ################
 
 
-def solve(grid):
+def solve(grid, values):
     # To start, every square can be any digit; then assign values from the grid.
-    values = starting_puzzle[:]
     for s, d in enumerate(grid):
         if d in digits and not assign(values, s, d):
             return False  # (Fail if we can't assign d to square s.)
@@ -210,17 +209,17 @@ def solve_all(grids, name="", showif=None):
     When showif is a number of seconds, display puzzles that take longer.
     When showif is None, don't display any puzzles."""
 
-    def time_solve(grid):
+    def stopwatch(grid):
         print("puzzle:  ", grid)
         print()
-        puzzle = [c for c in grid if c in digits or c in "0."]
-        assert len(puzzle) == 81
+        grid_list = [c for c in grid if c in digits or c in "0."]
+        assert len(grid_list) == 81
         start = time.time()
-        solution = solve(puzzle)
+        solution = solve(grid_list, starting_puzzle[:])
         t = time.time() - start
         # Display puzzles that take long enough
         if showif is not None and t > showif:
-            display(puzzle)
+            display(grid_list)
             if solution:
                 display(solution)
                 print("solution:", "".join(solution))
@@ -228,7 +227,7 @@ def solve_all(grids, name="", showif=None):
 
         return (t, solved(solution))
 
-    times, results = zip(*[time_solve(grid) for grid in grids])
+    times, results = zip(*[stopwatch(grid) for grid in grids])
     N = len(grids)
     if N > 0:
         print(
@@ -271,7 +270,9 @@ def units_and_peers():
 if __name__ == "__main__":
 
     test()
-    solve_all(from_file("puzzles/incredibly-difficult.txt"), "incredibly-difficult", 0.00)
+    solve_all(
+        from_file("puzzles/incredibly-difficult.txt"), "incredibly-difficult", 0.00
+    )
     solve_all(from_file("puzzles/one.txt"), "one", 0.00)
     solve_all(from_file("puzzles/two.txt"), "two", 0.00)
     solve_all(from_file("puzzles/easy50.txt"), "easy", 0.00)

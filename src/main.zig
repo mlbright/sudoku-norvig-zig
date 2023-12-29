@@ -19,19 +19,12 @@ pub fn fromFile(allocator: std.mem.Allocator, filename: []const u8) ![][]const u
     return try lines.toOwnedSlice();
 }
 
-pub fn puzzleInit(allocator: std.mem.Allocator, grid: []const u8, puzzle: *[81]std.bit_set.StaticBitSet(9)) !void {
+pub fn solve(allocator: std.mem.Allocator, grid: []const u8, puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
     _ = puzzle;
-
     _ = allocator;
-    _ = grid;
-}
-
-pub fn solve(allocator: std.mem.Allocator, puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
-    _ = allocator;
-    _ = puzzle;
-    // for (0..grid.len) |c| {
-    //     std.debug.print("{c}\n", .{grid[c]});
-    // }
+    for (0..grid.len) |c| {
+        std.debug.print("{c}\n", .{grid[c]});
+    }
     std.time.sleep(try getRandomCount());
     const t: [81]std.bit_set.StaticBitSet(9) = undefined;
     _ = t;
@@ -47,10 +40,9 @@ pub fn search(allocator: std.mem.Allocator, puzzle: *[81]std.bit_set.StaticBitSe
 
 pub fn timeSolve(allocator: std.mem.Allocator, grid: []const u8) !u64 {
     std.debug.print("puzzle:   {s}\n", .{grid});
-    var puzzle: [81]std.bit_set.StaticBitSet(9) = undefined;
-    try puzzleInit(allocator, grid, &puzzle);
     const start = try std.time.Instant.now();
-    _ = try solve(allocator, &puzzle);
+    var puzzle: [81]std.bit_set.StaticBitSet(9) = undefined;
+    _ = try solve(allocator, grid, &puzzle);
     const end = try std.time.Instant.now();
     const duration = std.time.Instant.since(end, start);
     displayGrid(&puzzle);
@@ -80,9 +72,9 @@ pub fn main() !void {
     defer arena.deinit();
     const allocator = arena.allocator();
 
+    try solveAll(allocator, "puzzles/incredibly-difficult.txt");
     try solveAll(allocator, "puzzles/one.txt");
-    try solveAll(allocator, "puzzles/three.txt");
-    try solveAll(allocator, "puzzles/all.txt");
+    try solveAll(allocator, "puzzles/two.txt");
     try solveAll(allocator, "puzzles/easy50.txt");
     try solveAll(allocator, "puzzles/top95.txt");
     try solveAll(allocator, "puzzles/hardest.txt");
