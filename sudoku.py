@@ -110,7 +110,7 @@ def parse_grid(grid):
     return values
 
 
-def grid_values(grid):
+def puzzle_init(grid):
     "Convert grid into a list of [square: char] with '0' or '.' for empties."
     chars = [c for c in grid if c in digits or c in "0."]
     assert len(chars) == 81
@@ -227,7 +227,7 @@ def solve_all(grids, name="", showif=None):
 
     def time_solve(grid):
         print("puzzle:  ", grid)
-        puzzle = grid_values(grid)
+        puzzle = puzzle_init(grid)
         start = time.time()
         solution = solve(puzzle)
         t = time.time() - start
@@ -270,7 +270,7 @@ def random_puzzle(N=17):
         ds = [values[s] for s in range(81) if len(values[s]) == 1]
         if len(ds) >= N and len(set(ds)) >= 8:
             return "".join(values[s] if len(values[s]) == 1 else "." for s in range(81))
-    return random_puzzle(N)  ## Give up and make a new puzzle
+    return random_puzzle(N)  # Give up and make a new puzzle
 
 
 if __name__ == "__main__":
