@@ -102,27 +102,6 @@ def test():
     print("All tests pass.\n")
 
 
-################ Parse a Grid ################
-
-
-def parse_grid(grid):
-    """Convert grid to a list of possible values, [square: digits], or
-    return False if a contradiction is detected."""
-    # To start, every square can be any digit; then assign values from the grid.
-    values = starting_puzzle[:]
-    for s, d in enumerate(grid):
-        if d in digits and not assign(values, s, d):
-            return False  ## (Fail if we can't assign d to square s.)
-    return values
-
-
-def puzzle_init(grid):
-    "Convert grid into a list of [square: char] with '0' or '.' for empties."
-    chars = [c for c in grid if c in digits or c in "0."]
-    assert len(chars) == 81
-    return chars
-
-
 ################ Constraint Propagation ################
 
 
@@ -183,7 +162,12 @@ def display(values):
 
 
 def solve(grid):
-    return search(parse_grid(grid))
+    # To start, every square can be any digit; then assign values from the grid.
+    values = starting_puzzle[:]
+    for s, d in enumerate(grid):
+        if d in digits and not assign(values, s, d):
+            return False  # (Fail if we can't assign d to square s.)
+    return search(values)
 
 
 def search(values):
@@ -229,7 +213,8 @@ def solve_all(grids, name="", showif=None):
     def time_solve(grid):
         print("puzzle:  ", grid)
         print()
-        puzzle = puzzle_init(grid)
+        puzzle = [c for c in grid if c in digits or c in "0."]
+        assert len(puzzle) == 81
         start = time.time()
         solution = solve(puzzle)
         t = time.time() - start
@@ -239,7 +224,7 @@ def solve_all(grids, name="", showif=None):
             if solution:
                 display(solution)
                 print("solution:", "".join(solution))
-            print("(%.5f seconds)" % t)
+            print("(%.5f seconds)\n" % t)
 
         return (t, solved(solution))
 
@@ -247,7 +232,7 @@ def solve_all(grids, name="", showif=None):
     N = len(grids)
     if N > 0:
         print(
-            "Solved %d of %d %s puzzles (avg %.4f secs (%.2f Hz), max %.4f secs).\n"
+            "Solved %d of %d %s puzzles (avg %.5f secs (%.5f Hz), max %.5f secs).\n"
             % (sum(results), N, name, sum(times) / N, N / sum(times), max(times))
         )
 
@@ -286,8 +271,9 @@ def units_and_peers():
 if __name__ == "__main__":
 
     test()
+    solve_all(from_file("puzzles/incredibly-difficult.txt"), "incredibly-difficult", 0.00)
     solve_all(from_file("puzzles/one.txt"), "one", 0.00)
-    solve_all(from_file("puzzles/three.txt"), "three", 0.00)
+    solve_all(from_file("puzzles/two.txt"), "two", 0.00)
     solve_all(from_file("puzzles/easy50.txt"), "easy", 0.00)
     solve_all(from_file("puzzles/top95.txt"), "hard", 0.00)
     solve_all(from_file("puzzles/hardest.txt"), "hardest", 0.00)
