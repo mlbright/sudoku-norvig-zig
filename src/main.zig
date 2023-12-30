@@ -20,11 +20,44 @@ pub fn fromFile(allocator: std.mem.Allocator, filename: []const u8) ![][]const u
 }
 
 pub fn solve(allocator: std.mem.Allocator, grid: []const u8, puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
-    for (0..grid.len) |c| {
-        std.debug.print("{c}\n", .{grid[c]});
+    for (grid, 0..grid.len) |c, square| {
+        // std.debug.print("{c}\n", .{grid[c]});
+        if (std.ascii.isDigit(c) and c != '0') {
+            const d: usize = try std.fmt.charToDigit(c, 10);
+            if (!assign(puzzle, square, d)) {
+                return false;
+            }
+        }
     }
-    std.time.sleep(try getRandomCount());
     return search(allocator, puzzle);
+}
+
+pub fn assign(puzzle: *[81]std.bit_set.StaticBitSet(9), square: usize, d: usize) bool {
+    for (0..9) |v| {
+        if (puzzle.*[square].isSet(v) and v != d) {
+            if (!eliminate(puzzle, square, v)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+pub fn eliminate(puzzle: *[81]std.bit_set.StaticBitSet(9), square: usize, d: usize) bool {
+    if (!puzzle.*[square].isSet(d)) {
+        return true;
+    }
+    puzzle.*[square].setValue(d, false);
+    if (puzzle.*[square].count() == 0) {
+        return false; // contradiction
+    }
+
+    // (1) If a square s is reduced to one value d2, then eliminate d2 from the peers.
+    if (puzzle.*[square].count() == 1) {
+        return false;
+    }
+
+    return true;
 }
 
 pub fn search(allocator: std.mem.Allocator, puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
