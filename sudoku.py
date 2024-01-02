@@ -35,7 +35,12 @@ def box_units():
     units = []
     for r in [[0, 1, 2], [3, 4, 5], [6, 7, 8]]:
         for c in [[0, 1, 2], [3, 4, 5], [6, 7, 8]]:
-            unit = set([(i + (9 * j)) for i in r for j in c])
+            # unit = set()
+            # for i in r:
+            #     for j in c:
+            #         print(i, j, i + (j * 9))
+            #         unit.add(i + (j * 9))
+            unit = set([(i + (j*9)) for i in r for j in c])
             units.append(unit)
 
     return units
@@ -70,9 +75,11 @@ def test():
     assert len(horizontal()) == 9
     assert len(vertical()) == 9
     assert len(box_units()) == 9
+    print(box_units())
     assert len(unitlist) == 27
     print(sorted(unitlist[1]))
     print(sorted(unitlist[10]))
+    print(sorted(unitlist[25]))
     print(sorted(unitlist[26]))
     assert len(units) == 81
     assert len(peers) == 81

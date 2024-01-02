@@ -2,19 +2,17 @@ const std = @import("std");
 const ArrayList = std.ArrayList;
 
 pub fn generateUnits() [27][9]usize {
-    var units: [27][9]usize = undefined;
-
-    // horizontal units
+    var horizontal_units: [9][9]usize = undefined;
     for (0..9) |i| {
         for (0..9) |j| {
-            units[i][j] = (i * 9) + j;
+            horizontal_units[i][j] = (i * 9) + j;
         }
     }
 
-    // vertical units
+    var vertical_units: [9][9]usize = undefined;
     for (0..9) |i| {
         for (0..9) |j| {
-            units[i + 9][j] = i + (9 * j);
+            vertical_units[i][j] = i + (9 * j);
         }
     }
 
@@ -25,17 +23,23 @@ pub fn generateUnits() [27][9]usize {
         [_]usize{ 6, 7, 8 },
     };
 
-    for (box_indices) |row| {
-        for (box_indices) |column| {
-            for (row) |i| {
-                for (column) |j| {
-                    units[i + 18][j] = i + (9 * j);
+    var box_units: [9][9]usize = undefined;
+    var x: usize = 0;
+    var y: usize = 0;
+    for (box_indices) |r| {
+        for (box_indices) |c| {
+            for (r) |i| {
+                for (c) |j| {
+                    box_units[x][y] = i + (9 * j);
+                    y += 1;
                 }
             }
+            x += 1;
+            y = 0;
         }
     }
 
-    return units;
+    return horizontal_units ++ vertical_units ++ box_units;
 }
 
 const unitlist = generateUnits();
@@ -48,11 +52,10 @@ test "units" {
     try std.testing.expectEqual(@as(usize, 13), v);
     v = unitlist_test[10][5];
     try std.testing.expectEqual(@as(usize, 46), v);
-    for (0..9) |i| {
-        std.debug.print("{d}\n", .{unitlist_test[25][i]});
-    }
+    v = unitlist_test[25][4];
+    try std.testing.expectEqual(@as(usize, 43), v);
     v = unitlist_test[26][1];
-    try std.testing.expectEqual(@as(usize, 61), v);
+    try std.testing.expectEqual(@as(usize, 69), v);
 }
 
 pub fn readInputFile(allocator: std.mem.Allocator, filename: []const u8) ![]const u8 {
