@@ -35,7 +35,7 @@ def box_units():
     units = []
     for r in [[0, 1, 2], [3, 4, 5], [6, 7, 8]]:
         for c in [[0, 1, 2], [3, 4, 5], [6, 7, 8]]:
-            unit = set([(i + 9 * j) for i in r for j in c])
+            unit = set([(i + (9 * j)) for i in r for j in c])
             units.append(unit)
 
     return units
@@ -67,9 +67,15 @@ for i in range(81):
 
 def test():
     "A set of tests that must pass."
+    assert len(horizontal()) == 9
+    assert len(vertical()) == 9
+    assert len(box_units()) == 9
+    assert len(unitlist) == 27
+    print(sorted(unitlist[1]))
+    print(sorted(unitlist[10]))
+    print(sorted(unitlist[26]))
     assert len(units) == 81
     assert len(peers) == 81
-    assert len(unitlist) == 27
     assert all(len(units[s]) == 3 for s in range(81))
     assert all(len(peers[s]) == 20 for s in range(81))
     assert units[19] == [
@@ -268,6 +274,7 @@ def units_and_peers():
 if __name__ == "__main__":
 
     test()
+    raise SystemExit
     solve_all(
         from_file("puzzles/incredibly-difficult.txt"), "incredibly-difficult", 0.00
     )

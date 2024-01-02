@@ -1,6 +1,60 @@
 const std = @import("std");
 const ArrayList = std.ArrayList;
 
+pub fn generateUnits() [27][9]usize {
+    var units: [27][9]usize = undefined;
+
+    // horizontal units
+    for (0..9) |i| {
+        for (0..9) |j| {
+            units[i][j] = (i * 9) + j;
+        }
+    }
+
+    // vertical units
+    for (0..9) |i| {
+        for (0..9) |j| {
+            units[i + 9][j] = i + (9 * j);
+        }
+    }
+
+    // box units
+    const box_indices = comptime [3][3]usize{
+        [_]usize{ 0, 1, 2 },
+        [_]usize{ 3, 4, 5 },
+        [_]usize{ 6, 7, 8 },
+    };
+
+    for (box_indices) |row| {
+        for (box_indices) |column| {
+            for (row) |i| {
+                for (column) |j| {
+                    units[i + 18][j] = i + (9 * j);
+                }
+            }
+        }
+    }
+
+    return units;
+}
+
+const unitlist = generateUnits();
+
+test "units" {
+    const unitlist_test = generateUnits();
+    var v = unitlist_test[0][8];
+    try std.testing.expectEqual(@as(usize, 8), v);
+    v = unitlist_test[1][4];
+    try std.testing.expectEqual(@as(usize, 13), v);
+    v = unitlist_test[10][5];
+    try std.testing.expectEqual(@as(usize, 46), v);
+    for (0..9) |i| {
+        std.debug.print("{d}\n", .{unitlist_test[25][i]});
+    }
+    v = unitlist_test[26][1];
+    try std.testing.expectEqual(@as(usize, 61), v);
+}
+
 pub fn readInputFile(allocator: std.mem.Allocator, filename: []const u8) ![]const u8 {
     const file = try std.fs.cwd().openFile(filename, .{});
     defer file.close();
@@ -47,7 +101,7 @@ pub fn eliminate(puzzle: *[81]std.bit_set.StaticBitSet(9), square: usize, d: usi
     if (!puzzle.*[square].isSet(d)) {
         return true;
     }
-    puzzle.*[square].setValue(d, false);
+    puzzle.*[square].unset(d);
     if (puzzle.*[square].count() == 0) {
         return false; // contradiction
     }
