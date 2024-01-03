@@ -161,9 +161,7 @@ pub fn fromFile(allocator: std.mem.Allocator, filename: []const u8) ![][]const u
 
 pub fn solve(allocator: std.mem.Allocator, grid: []const u8, puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
     for (0..81) |square| {
-        // std.debug.print("{c}\n", .{grid[c]});
         if (std.ascii.isDigit(grid[square]) and grid[square] != '0') {
-            std.debug.print("{c}\n", .{grid[square]});
             const d: usize = try std.fmt.charToDigit(grid[square], 10);
             if (!assign(puzzle, square, d - 1)) {
                 return false;
@@ -235,22 +233,20 @@ pub fn eliminate(puzzle: *[81]std.bit_set.StaticBitSet(9), square: usize, d: usi
 pub fn search(allocator: std.mem.Allocator, puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
     var square_with_fewest_possibilities: usize = 82;
     var number_of_possibilities: usize = 10;
-    var solved: bool = true;
     for (0..81) |square| {
         const t = puzzle.*[square].count();
         if (t > 1) {
-            solved = false;
             if (t < number_of_possibilities) {
                 number_of_possibilities = t;
                 square_with_fewest_possibilities = square;
-            }
-            if (t == 2) {
-                break;
+                if (number_of_possibilities == 2) {
+                    break;
+                }
             }
         }
     }
 
-    if (solved) {
+    if (square_with_fewest_possibilities == 82) {
         return true;
     }
 
@@ -262,7 +258,11 @@ pub fn search(allocator: std.mem.Allocator, puzzle: *[81]std.bit_set.StaticBitSe
                 duplicate[index] = duplicate[index].intersectWith(puzzle.*[index]);
             }
             if (assign(&duplicate, square_with_fewest_possibilities, b)) {
-                return search(allocator, &duplicate);
+                const result = try search(allocator, &duplicate);
+                if (result) {
+                    puzzle.* = duplicate;
+                    return true;
+                }
             }
         }
     }
@@ -291,7 +291,7 @@ pub fn displayGrid(puzzle: *[81]std.bit_set.StaticBitSet(9)) void {
     for (0..81) |square| {
         const d = puzzle.*[square].findFirstSet();
         if (d) |digit| {
-            std.debug.print("{d}", .{digit+1});
+            std.debug.print("{d}", .{digit + 1});
         } else {
             std.debug.print(".", .{});
         }
@@ -313,7 +313,7 @@ pub fn main() !void {
     const allocator = arena.allocator();
 
     try solveAll(allocator, "puzzles/easy1.txt");
-    // try solveAll(allocator, "puzzles/incredibly-difficult.txt");
+    try solveAll(allocator, "puzzles/incredibly-difficult.txt");
     // try solveAll(allocator, "puzzles/one.txt");
     // try solveAll(allocator, "puzzles/two.txt");
     // try solveAll(allocator, "puzzles/easy50.txt");
