@@ -202,7 +202,7 @@ pub fn eliminate(puzzle: *[81]std.bit_set.StaticBitSet(9), square: usize, d: usi
     }
 
     // (2) If a unit u is reduced to only one spot for the value 'd', then put it there.
-    for (units[square]) |unit| {
+    check_units: for (units[square]) |unit| {
         var spots: [9]usize = undefined;
         var spots_length: usize = 0;
         for (unit) |s| {
@@ -212,7 +212,7 @@ pub fn eliminate(puzzle: *[81]std.bit_set.StaticBitSet(9), square: usize, d: usi
             }
 
             if (spots_length >= 2) {
-                break;
+                continue :check_units;
             }
         }
 
