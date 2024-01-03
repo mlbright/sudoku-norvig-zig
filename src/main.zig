@@ -165,7 +165,7 @@ pub fn solve(allocator: std.mem.Allocator, grid: []const u8, puzzle: *[81]std.bi
         if (std.ascii.isDigit(grid[square]) and grid[square] != '0') {
             std.debug.print("{c}\n", .{grid[square]});
             const d: usize = try std.fmt.charToDigit(grid[square], 10);
-            if (!assign(puzzle, square, d)) {
+            if (!assign(puzzle, square, d - 1)) {
                 return false;
             }
         }
@@ -258,10 +258,11 @@ pub fn search(allocator: std.mem.Allocator, puzzle: *[81]std.bit_set.StaticBitSe
         if (puzzle.*[square_with_fewest_possibilities].isSet(b)) {
             var duplicate: [81]std.bit_set.StaticBitSet(9) = undefined;
             for (0..81) |index| {
-                duplicate[index] = puzzle[index].clone(allocator);
+                duplicate[index] = std.bit_set.StaticBitSet(9).initFull();
+                duplicate[index] = duplicate[index].intersectWith(puzzle.*[index]);
             }
             if (assign(&duplicate, square_with_fewest_possibilities, b)) {
-                return true;
+                return search(allocator, &duplicate);
             }
         }
     }
@@ -271,18 +272,17 @@ pub fn search(allocator: std.mem.Allocator, puzzle: *[81]std.bit_set.StaticBitSe
 
 pub fn timeSolve(allocator: std.mem.Allocator, grid: []const u8) !u64 {
     std.debug.print("puzzle:   {s}\n", .{grid});
-    const start = try std.time.Instant.now();
     // initialize starting puzzle
     var puzzle: [81]std.bit_set.StaticBitSet(9) = undefined;
     for (0..81) |square| {
         puzzle[square] = std.bit_set.StaticBitSet(9).initFull();
     }
+    const start = try std.time.Instant.now();
     const result = try solve(allocator, grid, &puzzle);
+    _ = result;
     const end = try std.time.Instant.now();
     const duration = std.time.Instant.since(end, start);
-    if (!result) {
-        displayGrid(&puzzle);
-    }
+    displayGrid(&puzzle);
     return duration;
 }
 
@@ -291,7 +291,7 @@ pub fn displayGrid(puzzle: *[81]std.bit_set.StaticBitSet(9)) void {
     for (0..81) |square| {
         const d = puzzle.*[square].findFirstSet();
         if (d) |digit| {
-            std.debug.print("{d}", .{digit + 1});
+            std.debug.print("{d}", .{digit+1});
         } else {
             std.debug.print(".", .{});
         }
