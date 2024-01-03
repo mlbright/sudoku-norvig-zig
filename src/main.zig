@@ -252,11 +252,7 @@ pub fn search(puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
 
     for (0..9) |b| {
         if (puzzle.*[square_with_fewest_possibilities].isSet(b)) {
-            var duplicate: [81]std.bit_set.StaticBitSet(9) = undefined;
-            for (0..81) |index| {
-                duplicate[index] = std.bit_set.StaticBitSet(9).initFull();
-                duplicate[index] = duplicate[index].intersectWith(puzzle.*[index]);
-            }
+            var duplicate: [81]std.bit_set.StaticBitSet(9) = puzzle.*;
             if (assign(&duplicate, square_with_fewest_possibilities, b)) {
                 const result = try search(&duplicate);
                 if (result) {
