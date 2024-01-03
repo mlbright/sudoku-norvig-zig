@@ -316,12 +316,12 @@ pub fn main() !void {
     try solveAll(allocator, "puzzles/incredibly-difficult.txt");
     try solveAll(allocator, "puzzles/one.txt");
     try solveAll(allocator, "puzzles/two.txt");
-    try solveAll(allocator, "puzzles/easy50.txt");
+    // try solveAll(allocator, "puzzles/easy50.txt");
     // try solveAll(allocator, "puzzles/top95.txt");
     // try solveAll(allocator, "puzzles/hardest.txt");
     // try solveAll(allocator, "puzzles/hardest20.txt");
     // try solveAll(allocator, "puzzles/hardest20x50.txt");
-    try solveAll(allocator, "puzzles/topn87.txt");
+    // try solveAll(allocator, "puzzles/topn87.txt");
 }
 
 fn getRandomCount() !u64 {
