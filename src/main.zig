@@ -159,7 +159,7 @@ pub fn fromFile(allocator: std.mem.Allocator, filename: []const u8) ![][]const u
     return try lines.toOwnedSlice();
 }
 
-pub fn solve(allocator: std.mem.Allocator, grid: []const u8, puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
+pub fn solve(grid: []const u8, puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
     for (0..81) |square| {
         if (std.ascii.isDigit(grid[square]) and grid[square] != '0') {
             const d: usize = try std.fmt.charToDigit(grid[square], 10);
@@ -168,7 +168,7 @@ pub fn solve(allocator: std.mem.Allocator, grid: []const u8, puzzle: *[81]std.bi
             }
         }
     }
-    return search(allocator, puzzle);
+    return search(puzzle);
 }
 
 pub fn assign(puzzle: *[81]std.bit_set.StaticBitSet(9), square: usize, d: usize) bool {
@@ -216,21 +216,21 @@ pub fn eliminate(puzzle: *[81]std.bit_set.StaticBitSet(9), square: usize, d: usi
             }
         }
 
-        if (spots_length == 0) {
-            return false; // contradiction
-        }
-
         if (spots_length == 1) {
             if (!assign(puzzle, spots[0], d)) {
                 return false;
             }
+        }
+
+        if (spots_length == 0) {
+            return false; // contradiction
         }
     }
 
     return true;
 }
 
-pub fn search(allocator: std.mem.Allocator, puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
+pub fn search(puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
     var square_with_fewest_possibilities: usize = 82;
     var number_of_possibilities: usize = 10;
     for (0..81) |square| {
@@ -258,7 +258,7 @@ pub fn search(allocator: std.mem.Allocator, puzzle: *[81]std.bit_set.StaticBitSe
                 duplicate[index] = duplicate[index].intersectWith(puzzle.*[index]);
             }
             if (assign(&duplicate, square_with_fewest_possibilities, b)) {
-                const result = try search(allocator, &duplicate);
+                const result = try search(&duplicate);
                 if (result) {
                     puzzle.* = duplicate;
                     return true;
@@ -270,7 +270,7 @@ pub fn search(allocator: std.mem.Allocator, puzzle: *[81]std.bit_set.StaticBitSe
     return false;
 }
 
-pub fn timeSolve(allocator: std.mem.Allocator, grid: []const u8) !u64 {
+pub fn timeSolve(grid: []const u8) !u64 {
     std.debug.print("puzzle:   {s}\n", .{grid});
     // initialize starting puzzle
     var puzzle: [81]std.bit_set.StaticBitSet(9) = undefined;
@@ -278,7 +278,7 @@ pub fn timeSolve(allocator: std.mem.Allocator, grid: []const u8) !u64 {
         puzzle[square] = std.bit_set.StaticBitSet(9).initFull();
     }
     const start = try std.time.Instant.now();
-    const result = try solve(allocator, grid, &puzzle);
+    const result = try solve(grid, &puzzle);
     _ = result;
     const end = try std.time.Instant.now();
     const duration = std.time.Instant.since(end, start);
@@ -302,7 +302,7 @@ pub fn displayGrid(puzzle: *[81]std.bit_set.StaticBitSet(9)) void {
 pub fn solveAll(allocator: std.mem.Allocator, filename: []const u8) !void {
     const grids = try fromFile(allocator, filename);
     for (grids) |grid| {
-        const elapsed = try timeSolve(allocator, grid);
+        const elapsed = try timeSolve(grid);
         std.debug.print("({d:.5} seconds)\n", .{@as(f64, @floatFromInt(elapsed)) / 1_000_000_000.00});
     }
 }
@@ -322,11 +322,4 @@ pub fn main() !void {
     // try solveAll(allocator, "puzzles/hardest20.txt");
     // try solveAll(allocator, "puzzles/hardest20x50.txt");
     // try solveAll(allocator, "puzzles/topn87.txt");
-}
-
-fn getRandomCount() !u64 {
-    var seed: u64 = undefined;
-    try std.os.getrandom(std.mem.asBytes(&seed));
-    var random = std.rand.DefaultPrng.init(seed);
-    return random.random().uintAtMost(u64, 1_200_000);
 }
