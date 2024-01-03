@@ -287,7 +287,7 @@ pub fn timeSolve(allocator: std.mem.Allocator, grid: []const u8) !u64 {
 }
 
 pub fn displayGrid(puzzle: *[81]std.bit_set.StaticBitSet(9)) void {
-    std.debug.print("\nsolution: ", .{});
+    std.debug.print("solution: ", .{});
     for (0..81) |square| {
         const d = puzzle.*[square].findFirstSet();
         if (d) |digit| {
@@ -314,14 +314,14 @@ pub fn main() !void {
 
     try solveAll(allocator, "puzzles/easy1.txt");
     try solveAll(allocator, "puzzles/incredibly-difficult.txt");
-    // try solveAll(allocator, "puzzles/one.txt");
-    // try solveAll(allocator, "puzzles/two.txt");
-    // try solveAll(allocator, "puzzles/easy50.txt");
+    try solveAll(allocator, "puzzles/one.txt");
+    try solveAll(allocator, "puzzles/two.txt");
+    try solveAll(allocator, "puzzles/easy50.txt");
     // try solveAll(allocator, "puzzles/top95.txt");
     // try solveAll(allocator, "puzzles/hardest.txt");
     // try solveAll(allocator, "puzzles/hardest20.txt");
     // try solveAll(allocator, "puzzles/hardest20x50.txt");
-    // try solveAll(allocator, "puzzles/topn87.txt");
+    try solveAll(allocator, "puzzles/topn87.txt");
 }
 
 fn getRandomCount() !u64 {
