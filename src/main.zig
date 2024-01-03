@@ -160,10 +160,11 @@ pub fn fromFile(allocator: std.mem.Allocator, filename: []const u8) ![][]const u
 }
 
 pub fn solve(allocator: std.mem.Allocator, grid: []const u8, puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
-    for (grid, 0..grid.len) |c, square| {
+    for (0..81) |square| {
         // std.debug.print("{c}\n", .{grid[c]});
-        if (std.ascii.isDigit(c) and c != '0') {
-            const d: usize = try std.fmt.charToDigit(c, 10);
+        if (std.ascii.isDigit(grid[square]) and grid[square] != '0') {
+            std.debug.print("{c}\n", .{grid[square]});
+            const d: usize = try std.fmt.charToDigit(grid[square], 10);
             if (!assign(puzzle, square, d)) {
                 return false;
             }
@@ -192,9 +193,40 @@ pub fn eliminate(puzzle: *[81]std.bit_set.StaticBitSet(9), square: usize, d: usi
         return false; // contradiction
     }
 
-    // (1) If a square s is reduced to one value d2, then eliminate d2 from the peers.
+    // (1) If a square s is reduced to one value 'val', then eliminate 'val' from the peers.
     if (puzzle.*[square].count() == 1) {
-        return false;
+        const val = puzzle.*[square].findFirstSet().?;
+        for (peers[square]) |peer| {
+            if (!eliminate(puzzle, peer, val)) {
+                return false;
+            }
+        }
+    }
+
+    // (2) If a unit u is reduced to only one spot for the value 'd', then put it there.
+    for (units[square]) |unit| {
+        var spots: [9]usize = undefined;
+        var spots_length: usize = 0;
+        for (unit) |s| {
+            if (puzzle.*[s].isSet(d)) {
+                spots[spots_length] = s;
+                spots_length += 1;
+            }
+
+            if (spots_length >= 2) {
+                break;
+            }
+        }
+
+        if (spots_length == 0) {
+            return false; // contradiction
+        }
+
+        if (spots_length == 1) {
+            if (!assign(puzzle, spots[0], d)) {
+                return false;
+            }
+        }
     }
 
     return true;
@@ -204,28 +236,37 @@ pub fn search(allocator: std.mem.Allocator, puzzle: *[81]std.bit_set.StaticBitSe
     _ = allocator;
     _ = puzzle;
 
-    return false;
+    return true;
 }
 
 pub fn timeSolve(allocator: std.mem.Allocator, grid: []const u8) !u64 {
     std.debug.print("puzzle:   {s}\n", .{grid});
     const start = try std.time.Instant.now();
+    // initialize starting puzzle
     var puzzle: [81]std.bit_set.StaticBitSet(9) = undefined;
-    _ = try solve(allocator, grid, &puzzle);
+    for (0..81) |square| {
+        puzzle[square] = std.bit_set.StaticBitSet(9).initFull();
+    }
+    const result = try solve(allocator, grid, &puzzle);
     const end = try std.time.Instant.now();
     const duration = std.time.Instant.since(end, start);
-    displayGrid(&puzzle);
+    if (!result) {
+        displayGrid(&puzzle);
+    }
     return duration;
 }
 
-pub fn displayGrid(grid: *[81]std.bit_set.StaticBitSet(9)) void {
-    for (grid) |c| {
-        _ = c;
-
-        for (0..9) |d| {
-            _ = d;
+pub fn displayGrid(puzzle: *[81]std.bit_set.StaticBitSet(9)) void {
+    std.debug.print("\nsolution: ", .{});
+    for (0..81) |square| {
+        const d = puzzle.*[square].findFirstSet();
+        if (d) |digit| {
+            std.debug.print("{d}", .{digit});
+        } else {
+            std.debug.print(".", .{});
         }
     }
+    std.debug.print("\n", .{});
 }
 
 pub fn solveAll(allocator: std.mem.Allocator, filename: []const u8) !void {
@@ -241,15 +282,15 @@ pub fn main() !void {
     defer arena.deinit();
     const allocator = arena.allocator();
 
-    try solveAll(allocator, "puzzles/incredibly-difficult.txt");
-    try solveAll(allocator, "puzzles/one.txt");
-    try solveAll(allocator, "puzzles/two.txt");
+    // try solveAll(allocator, "puzzles/incredibly-difficult.txt");
+    // try solveAll(allocator, "puzzles/one.txt");
+    // try solveAll(allocator, "puzzles/two.txt");
     try solveAll(allocator, "puzzles/easy50.txt");
-    try solveAll(allocator, "puzzles/top95.txt");
-    try solveAll(allocator, "puzzles/hardest.txt");
-    try solveAll(allocator, "puzzles/hardest20.txt");
-    try solveAll(allocator, "puzzles/hardest20x50.txt");
-    try solveAll(allocator, "puzzles/topn87.txt");
+    // try solveAll(allocator, "puzzles/top95.txt");
+    // try solveAll(allocator, "puzzles/hardest.txt");
+    // try solveAll(allocator, "puzzles/hardest20.txt");
+    // try solveAll(allocator, "puzzles/hardest20x50.txt");
+    // try solveAll(allocator, "puzzles/topn87.txt");
 }
 
 fn getRandomCount() !u64 {
