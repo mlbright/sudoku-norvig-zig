@@ -40,7 +40,7 @@ def box_units():
             #     for j in c:
             #         print(i, j, i + (j * 9))
             #         unit.add(i + (j * 9))
-            unit = set([(i + (j*9)) for i in r for j in c])
+            unit = set([(i + (j * 9)) for i in r for j in c])
             units.append(unit)
 
     return units
@@ -90,7 +90,7 @@ def test():
         set([1, 10, 19, 28, 37, 46, 55, 64, 73]),
         set([0, 1, 2, 9, 10, 11, 18, 19, 20]),
     ]
-    print(units[19])
+    # print(units[19])
     assert peers[19] == {
         0,
         1,
@@ -113,6 +113,8 @@ def test():
         64,
         73,
     }
+    # print(peers[19])
+    # print(peers[53])
     print("All tests pass.\n")
 
 

@@ -86,13 +86,59 @@ pub fn determineUnits() [81][3][9]usize {
 }
 
 test "units" {
-    std.debug.print("\n", .{});
-    for (units[19]) |group| {
-        for (group) |d| {
-            std.debug.print("{d} ", .{d});
+    // std.debug.print("\n", .{});
+    // for (units[19]) |group| {
+    //     for (group) |d| {
+    //         std.debug.print("{d} ", .{d});
+    //     }
+    //     std.debug.print("\n", .{});
+    // }
+    try std.testing.expectEqual(@as(usize, 28), units[19][1][3]);
+    try std.testing.expectEqual(@as(usize, 18), units[19][2][2]);
+}
+
+const peers: [81][20]usize = determinePeers();
+
+pub fn determinePeers() [81][20]usize {
+    @setEvalBranchQuota(100000);
+    var t = std.mem.zeroes([81][20]usize);
+    for (0..81) |square| {
+        for (0..20) |p| {
+            t[square][p] = 82;
         }
-        std.debug.print("\n", .{});
     }
+    for (0..81) |square| {
+        var count = 0;
+        for (units[square]) |unit| {
+            for (unit) |u| {
+                if (u == square) {
+                    continue;
+                }
+                var already_included = false;
+
+                already_included = for (0..20) |i| {
+                    if (t[square][i] == u) {
+                        break true;
+                    }
+                } else false;
+
+                if (!already_included) {
+                    t[square][count] = u;
+                    count += 1;
+                }
+            }
+        }
+    }
+    return t;
+}
+
+test "peers" {
+    std.debug.print("\n", .{});
+    // for (peers[53]) |p| {
+    //     std.debug.print("{d} ", .{p});
+    // }
+    try std.testing.expectEqual(@as(usize, 43), peers[53][19]);
+    try std.testing.expectEqual(@as(usize, 11), peers[19][19]);
 }
 
 pub fn readInputFile(allocator: std.mem.Allocator, filename: []const u8) ![]const u8 {
