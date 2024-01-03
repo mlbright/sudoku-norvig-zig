@@ -295,12 +295,29 @@ pub fn displayGrid(puzzle: *[81]std.bit_set.StaticBitSet(9)) void {
     std.debug.print("\n", .{});
 }
 
-pub fn solveAll(allocator: std.mem.Allocator, filename: []const u8) !void {
+pub fn solveAll(allocator: std.mem.Allocator, filename: []const u8, name: []const u8) !void {
     const grids = try fromFile(allocator, filename);
+    var times: u64 = 0;
+    var max_time: u64 = 0;
     for (grids) |grid| {
         const elapsed = try timeSolve(grid);
         std.debug.print("({d:.5} seconds)\n", .{@as(f64, @floatFromInt(elapsed)) / 1_000_000_000.00});
+        times += elapsed;
+        if (elapsed > max_time) {
+            max_time = elapsed;
+        }
     }
+    const avg = @as(f64, @floatFromInt(times)) / (1_000_000_000 * @as(f64, @floatFromInt(grids.len)));
+    const hz = @as(f64, @floatFromInt(grids.len)) / @as(f64, @floatFromInt(times));
+    const max = @as(f64, @floatFromInt(max_time)) / 1_000_000_000;
+    std.debug.print("Solved {d} of {d} {s} puzzles (avg {d:.5} secs ({d:.5}), max {d:.5} secs).\n", .{
+        grids.len,
+        grids.len,
+        name,
+        avg,
+        hz,
+        max,
+    });
 }
 
 pub fn main() !void {
@@ -308,14 +325,14 @@ pub fn main() !void {
     defer arena.deinit();
     const allocator = arena.allocator();
 
-    try solveAll(allocator, "puzzles/easy1.txt");
-    try solveAll(allocator, "puzzles/incredibly-difficult.txt");
-    try solveAll(allocator, "puzzles/one.txt");
-    try solveAll(allocator, "puzzles/two.txt");
-    // try solveAll(allocator, "puzzles/easy50.txt");
-    // try solveAll(allocator, "puzzles/top95.txt");
-    // try solveAll(allocator, "puzzles/hardest.txt");
-    // try solveAll(allocator, "puzzles/hardest20.txt");
-    // try solveAll(allocator, "puzzles/hardest20x50.txt");
-    // try solveAll(allocator, "puzzles/topn87.txt");
+    try solveAll(allocator, "puzzles/easy1.txt", "easy");
+    try solveAll(allocator, "puzzles/incredibly-difficult.txt", "incredibly-difficult");
+    try solveAll(allocator, "puzzles/one.txt", "one");
+    try solveAll(allocator, "puzzles/two.txt", "two");
+    try solveAll(allocator, "puzzles/easy50.txt", "easy");
+    try solveAll(allocator, "puzzles/top95.txt", "hard");
+    try solveAll(allocator, "puzzles/hardest.txt", "hardest");
+    try solveAll(allocator, "puzzles/hardest20.txt", "hardest20");
+    try solveAll(allocator, "puzzles/hardest20x50.txt", "hardest20x50");
+    try solveAll(allocator, "puzzles/topn87.txt", "topn87");
 }
