@@ -75,12 +75,12 @@ def test():
     assert len(horizontal()) == 9
     assert len(vertical()) == 9
     assert len(box_units()) == 9
-    print(box_units())
+    # print(box_units())
     assert len(unitlist) == 27
-    print(sorted(unitlist[1]))
-    print(sorted(unitlist[10]))
-    print(sorted(unitlist[25]))
-    print(sorted(unitlist[26]))
+    # print(sorted(unitlist[1]))
+    # print(sorted(unitlist[10]))
+    # print(sorted(unitlist[25]))
+    # print(sorted(unitlist[26]))
     assert len(units) == 81
     assert len(peers) == 81
     assert all(len(units[s]) == 3 for s in range(81))
@@ -90,6 +90,7 @@ def test():
         set([1, 10, 19, 28, 37, 46, 55, 64, 73]),
         set([0, 1, 2, 9, 10, 11, 18, 19, 20]),
     ]
+    print(units[19])
     assert peers[19] == {
         0,
         1,

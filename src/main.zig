@@ -1,7 +1,6 @@
 const std = @import("std");
-const ArrayList = std.ArrayList;
 
-pub fn generateUnits() [27][9]usize {
+pub fn generateUnitList() [27][9]usize {
     var horizontal_units: [9][9]usize = undefined;
     for (0..9) |i| {
         for (0..9) |j| {
@@ -42,10 +41,10 @@ pub fn generateUnits() [27][9]usize {
     return horizontal_units ++ vertical_units ++ box_units;
 }
 
-const unitlist = generateUnits();
+const unit_list = generateUnitList();
 
-test "units" {
-    const unitlist_test = generateUnits();
+test "unitlist" {
+    const unitlist_test = generateUnitList();
     var v = unitlist_test[0][8];
     try std.testing.expectEqual(@as(usize, 8), v);
     v = unitlist_test[1][4];
@@ -56,6 +55,44 @@ test "units" {
     try std.testing.expectEqual(@as(usize, 43), v);
     v = unitlist_test[26][1];
     try std.testing.expectEqual(@as(usize, 69), v);
+}
+
+const units: [81][3][9]usize = determineUnits();
+
+pub fn determineUnits() [81][3][9]usize {
+    @setEvalBranchQuota(100000);
+    var t: [81][3][9]usize = undefined;
+    var count: usize = 0;
+    for (0..81) |square| {
+        outer: for (unit_list) |unit| {
+            for (unit) |u| {
+                if (square == u) {
+                    for (0..9) |i| {
+                        t[square][count][i] = unit[i];
+                    }
+                    count += 1;
+                    if (count < 3) {
+                        break;
+                    } else {
+                        count = 0;
+                        break :outer;
+                    }
+                }
+            }
+        }
+    }
+
+    return t;
+}
+
+test "units" {
+    std.debug.print("\n", .{});
+    for (units[19]) |group| {
+        for (group) |d| {
+            std.debug.print("{d} ", .{d});
+        }
+        std.debug.print("\n", .{});
+    }
 }
 
 pub fn readInputFile(allocator: std.mem.Allocator, filename: []const u8) ![]const u8 {
