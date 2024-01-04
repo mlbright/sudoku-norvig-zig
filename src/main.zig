@@ -277,7 +277,7 @@ pub fn timeSolve(grid: []const u8) !u64 {
     const result = try solve(grid, &puzzle);
     _ = result;
     const end = try std.time.Instant.now();
-    const duration = std.time.Instant.since(end, start);
+    const duration = end.since(start);
     displayGrid(&puzzle);
     return duration;
 }
@@ -308,9 +308,9 @@ pub fn solveAll(allocator: std.mem.Allocator, filename: []const u8, name: []cons
         }
     }
     const avg = @as(f64, @floatFromInt(times)) / (1_000_000_000 * @as(f64, @floatFromInt(grids.len)));
-    const hz = @as(f64, @floatFromInt(grids.len)) / @as(f64, @floatFromInt(times));
+    const hz = @as(f64, @floatFromInt(grids.len)) / (@as(f64, @floatFromInt(times)) / 1_000_000_000);
     const max = @as(f64, @floatFromInt(max_time)) / 1_000_000_000;
-    std.debug.print("Solved {d} of {d} {s} puzzles (avg {d:.5} secs ({d:.5}), max {d:.5} secs).\n", .{
+    std.debug.print("Solved {d} of {d} {s} puzzles (avg {d:.5} secs ({d:.5} Hz), max {d:.5} secs).\n", .{
         grids.len,
         grids.len,
         name,
