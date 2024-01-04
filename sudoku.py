@@ -296,4 +296,5 @@ if __name__ == "__main__":
     solve_all(from_file("puzzles/hardest20.txt"), "hardest20", 0.00)
     solve_all(from_file("puzzles/hardest20x50.txt"), "hardest20x50", 0.00)
     solve_all(from_file("puzzles/topn87.txt"), "topn87", 0.00)
+    solve_all(from_file("puzzles/all.txt"), "all", None)
     # solve_all([random_puzzle() for _ in range(100)], "random", 0.00)

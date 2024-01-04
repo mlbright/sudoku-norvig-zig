@@ -335,4 +335,5 @@ pub fn main() !void {
     try solveAll(allocator, "puzzles/hardest20.txt", "hardest20");
     try solveAll(allocator, "puzzles/hardest20x50.txt", "hardest20x50");
     try solveAll(allocator, "puzzles/topn87.txt", "topn87");
+    try solveAll(allocator, "puzzles/all.txt", "all");
 }
