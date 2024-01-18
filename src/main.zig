@@ -220,9 +220,7 @@ pub fn eliminate(puzzle: *[81]std.bit_set.StaticBitSet(9), square: usize, d: usi
             if (!assign(puzzle, spots[0], d)) {
                 return false;
             }
-        }
-
-        if (spots_length == 0) {
+        } else if (spots_length == 0) {
             return false; // contradiction
         }
     }
