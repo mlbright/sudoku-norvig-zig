@@ -229,7 +229,7 @@ pub fn eliminate(puzzle: *[81]std.bit_set.StaticBitSet(9), square: usize, d: usi
 }
 
 pub fn search(puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
-    var square_with_fewest_possibilities: usize = 82;
+    var square_with_fewest_possibilities: ?usize = null;
     var number_of_possibilities: usize = 10;
     for (0..81) |square| {
         const t = puzzle.*[square].count();
@@ -244,21 +244,21 @@ pub fn search(puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
         }
     }
 
-    if (square_with_fewest_possibilities == 82) {
-        return true;
-    }
-
-    for (0..9) |b| {
-        if (puzzle.*[square_with_fewest_possibilities].isSet(b)) {
-            var duplicate: [81]std.bit_set.StaticBitSet(9) = puzzle.*;
-            if (assign(&duplicate, square_with_fewest_possibilities, b)) {
-                const result = try search(&duplicate);
-                if (result) {
-                    puzzle.* = duplicate;
-                    return true;
+    if (square_with_fewest_possibilities) |v| {
+        for (0..9) |b| {
+            if (puzzle.*[v].isSet(b)) {
+                var duplicate: [81]std.bit_set.StaticBitSet(9) = puzzle.*;
+                if (assign(&duplicate, v, b)) {
+                    const result = try search(&duplicate);
+                    if (result) {
+                        puzzle.* = duplicate;
+                        return true;
+                    }
                 }
             }
         }
+    } else {
+        return true;
     }
 
     return false;
