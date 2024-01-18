@@ -203,24 +203,22 @@ pub fn eliminate(puzzle: *[81]std.bit_set.StaticBitSet(9), square: usize, d: usi
 
     // (2) If a unit u is reduced to only one spot for the value 'd', then put it there.
     check_units: for (units[square]) |unit| {
-        var spots: [9]usize = undefined;
-        var spots_length: usize = 0;
+        var spot: ?usize = null;
         for (unit) |s| {
             if (puzzle.*[s].isSet(d)) {
-                spots[spots_length] = s;
-                spots_length += 1;
-            }
-
-            if (spots_length >= 2) {
-                continue :check_units;
+                if (spot) |_| {
+                    continue :check_units;
+                } else {
+                    spot = s;
+                }
             }
         }
 
-        if (spots_length == 1) {
-            if (!assign(puzzle, spots[0], d)) {
+        if (spot) |v| {
+            if (!assign(puzzle, v, d)) {
                 return false;
             }
-        } else if (spots_length == 0) {
+        } else {
             return false; // contradiction
         }
     }
@@ -258,6 +256,7 @@ pub fn search(puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
             }
         }
     } else {
+        // all squares had 1 value: puzzle is solved
         return true;
     }
 
@@ -323,10 +322,10 @@ pub fn main() !void {
     defer arena.deinit();
     const allocator = arena.allocator();
 
-    try solveAll(allocator, "puzzles/easy1.txt", "easy");
+    // try solveAll(allocator, "puzzles/easy1.txt", "easy");
     try solveAll(allocator, "puzzles/incredibly-difficult.txt", "incredibly-difficult");
-    try solveAll(allocator, "puzzles/one.txt", "one");
-    try solveAll(allocator, "puzzles/two.txt", "two");
+    // try solveAll(allocator, "puzzles/one.txt", "one");
+    // try solveAll(allocator, "puzzles/two.txt", "two");
     try solveAll(allocator, "puzzles/easy50.txt", "easy");
     try solveAll(allocator, "puzzles/top95.txt", "hard");
     try solveAll(allocator, "puzzles/hardest.txt", "hardest");
