@@ -172,8 +172,9 @@ pub fn solve(grid: []const u8, puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
 }
 
 pub fn assign(puzzle: *[81]std.bit_set.StaticBitSet(9), square: usize, d: usize) bool {
-    for (0..9) |v| {
-        if (puzzle.*[square].isSet(v) and v != d) {
+    var i = puzzle.*[square].iterator(.{});
+    while (i.next()) |v| {
+        if (v != d) {
             if (!eliminate(puzzle, square, v)) {
                 return false;
             }
@@ -243,15 +244,14 @@ pub fn search(puzzle: *[81]std.bit_set.StaticBitSet(9)) !bool {
     }
 
     if (square_with_fewest_possibilities) |v| {
-        for (0..9) |b| {
-            if (puzzle.*[v].isSet(b)) {
-                var duplicate: [81]std.bit_set.StaticBitSet(9) = puzzle.*;
-                if (assign(&duplicate, v, b)) {
-                    const result = try search(&duplicate);
-                    if (result) {
-                        puzzle.* = duplicate;
-                        return true;
-                    }
+        var i = puzzle.*[v].iterator(.{});
+        while (i.next()) |b| {
+            var duplicate: [81]std.bit_set.StaticBitSet(9) = puzzle.*;
+            if (assign(&duplicate, v, b)) {
+                const result = try search(&duplicate);
+                if (result) {
+                    puzzle.* = duplicate;
+                    return true;
                 }
             }
         }
