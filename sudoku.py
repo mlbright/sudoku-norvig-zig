@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Solve Every Sudoku Puzzle
 
 # See http://norvig.com/sudoku.html
