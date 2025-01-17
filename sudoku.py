@@ -287,16 +287,17 @@ if __name__ == "__main__":
 
     # test()
     # solve_all(from_file("puzzles/easy1.txt"), "easy", 0.00)
-    solve_all(
-        from_file("puzzles/incredibly-difficult.txt"), "incredibly-difficult", 0.00
-    )
+    # solve_all(
+    #     from_file("puzzles/incredibly-difficult.txt"), "incredibly-difficult", 0.00
+    # )
     # solve_all(from_file("puzzles/one.txt"), "one", 0.00)
     # solve_all(from_file("puzzles/two.txt"), "two", 0.00)
-    solve_all(from_file("puzzles/easy50.txt"), "easy", 0.00)
-    solve_all(from_file("puzzles/top95.txt"), "hard", 0.00)
-    solve_all(from_file("puzzles/hardest.txt"), "hardest", 0.00)
-    solve_all(from_file("puzzles/hardest20.txt"), "hardest20", 0.00)
-    solve_all(from_file("puzzles/hardest20x50.txt"), "hardest20x50", 0.00)
-    solve_all(from_file("puzzles/topn87.txt"), "topn87", 0.00)
-    solve_all(from_file("puzzles/all.txt"), "all", 0.00)
+    solve_all(from_file("puzzles/rosetta.txt"), "rosetta", 0.00)
+    # solve_all(from_file("puzzles/easy50.txt"), "easy", 0.00)
+    # solve_all(from_file("puzzles/top95.txt"), "hard", 0.00)
+    # solve_all(from_file("puzzles/hardest.txt"), "hardest", 0.00)
+    # solve_all(from_file("puzzles/hardest20.txt"), "hardest20", 0.00)
+    # solve_all(from_file("puzzles/hardest20x50.txt"), "hardest20x50", 0.00)
+    # solve_all(from_file("puzzles/topn87.txt"), "topn87", 0.00)
+    # solve_all(from_file("puzzles/all.txt"), "all", 0.00)
     # solve_all([random_puzzle() for _ in range(100)], "random", 0.00)

@@ -323,14 +323,15 @@ pub fn main() !void {
     const allocator = arena.allocator();
 
     // try solveAll(allocator, "puzzles/easy1.txt", "easy");
-    try solveAll(allocator, "puzzles/incredibly-difficult.txt", "incredibly-difficult");
-    // try solveAll(allocator, "puzzles/one.txt", "one");
-    // try solveAll(allocator, "puzzles/two.txt", "two");
-    try solveAll(allocator, "puzzles/easy50.txt", "easy");
-    try solveAll(allocator, "puzzles/top95.txt", "hard");
-    try solveAll(allocator, "puzzles/hardest.txt", "hardest");
-    try solveAll(allocator, "puzzles/hardest20.txt", "hardest20");
-    try solveAll(allocator, "puzzles/hardest20x50.txt", "hardest20x50");
-    try solveAll(allocator, "puzzles/topn87.txt", "topn87");
-    try solveAll(allocator, "puzzles/all.txt", "all");
+    try solveAll(allocator, "puzzles/rosetta.txt", "unknown");
+    // try solveAll(allocator, "puzzles/incredibly-difficult.txt", "incredibly-difficult");
+    // // try solveAll(allocator, "puzzles/one.txt", "one");
+    // // try solveAll(allocator, "puzzles/two.txt", "two");
+    // try solveAll(allocator, "puzzles/easy50.txt", "easy");
+    // try solveAll(allocator, "puzzles/top95.txt", "hard");
+    // try solveAll(allocator, "puzzles/hardest.txt", "hardest");
+    // try solveAll(allocator, "puzzles/hardest20.txt", "hardest20");
+    // try solveAll(allocator, "puzzles/hardest20x50.txt", "hardest20x50");
+    // try solveAll(allocator, "puzzles/topn87.txt", "topn87");
+    // try solveAll(allocator, "puzzles/all.txt", "all");
 }
