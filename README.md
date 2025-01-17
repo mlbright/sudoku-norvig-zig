@@ -41,4 +41,27 @@ Compare with Python:
 python3 sudoku.py
 ```
 
+## Profile
+
+Profile the programs:
+
+```bash
+hyperfine --warmup 3 './sudoku-ffi-rosetta.lua' --export-markdown lua.md
+hyperfine --warmup 3 './zig-out/bin/norvig-sudoku-zig' --export-markdown zig.md
+hyperfine --warmup 3 './sudoku.py' --export-markdown python3.md
+```
+
+| Command | Mean [ms] | Min [ms] | Max [ms] | Relative |
+|:---|---:|---:|---:|---:|
+| `./sudoku-ffi-rosetta.lua` | 7.0 ± 0.7 | 5.3 | 8.4 | 1.00 |
+
+| Command | Mean [ms] | Min [ms] | Max [ms] | Relative |
+|:---|---:|---:|---:|---:|
+| `./zig-out/bin/norvig-sudoku-zig` | 2.7 ± 0.3 | 2.2 | 4.6 | 1.00 |
+
+| Command | Mean [ms] | Min [ms] | Max [ms] | Relative |
+|:---|---:|---:|---:|---:|
+| `./sudoku.py` | 38.4 ± 1.0 | 34.9 | 39.6 | 1.00 |
+
+
 [rabbit-hole]: https://github.com/mlbright/sudoku-norvig-rs#the-rabbit-hole
