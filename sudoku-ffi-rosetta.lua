@@ -23,13 +23,13 @@ local function show(x)
 end
 
 local function trycell(x, pos)
-  if pos == 81 then
-    return true
-  end
-
   local row = math.floor(pos / 9)
   local col = pos % 9
   local used = 0
+
+  if pos == 81 then
+    return true
+  end
 
   if x[pos] ~= 0 then
     return trycell(x, pos + 1)
@@ -53,6 +53,7 @@ local function trycell(x, pos)
   end
 
   x[pos] = 1
+
   while x[pos] <= 9 do
     if band(used, 1) == 0 and trycell(x, pos + 1) then
       return true
@@ -62,12 +63,14 @@ local function trycell(x, pos)
   end
 
   x[pos] = 0
+
   return false
 end
 
 local function solve(str)
   local x = FFI.new("char[?]", 81)
   str = str:gsub("[%c%s]", "")
+
   for i = 0, 81 do
     x[i] = tonumber(str:sub(i + 1, i + 1)) or 0
   end
@@ -80,17 +83,18 @@ local function solve(str)
 end
 
 do -- MAIN
+  -- solve([[
+  --   .....6....59.....82....8....45........3........6..3.54...325..6..................
+  -- 	]])
   solve([[
-		5.. .7. ...
-		6.. 195 ...
-		.98 ... .6.
-
-		8.. .6. ..3
-		4.. 8.3 ..1
-		7.. .2. ..6
-
-		.6. ... 28.
-		... 419 ..5
-		... .8. .79
-		]])
+    1 0 0 0 0 7 0 9 0
+    0 3 0 0 2 0 0 0 8
+    0 0 9 6 0 0 5 0 0
+    0 0 5 3 0 0 9 0 0
+    0 1 0 0 8 0 0 0 2
+    6 0 0 0 0 4 0 0 0
+    3 0 0 0 0 0 0 1 0
+    0 4 1 0 0 0 0 0 7
+    0 0 7 0 0 0 3 0 0
+  ]])
 end

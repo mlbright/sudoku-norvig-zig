@@ -4,7 +4,7 @@
 
 Down the [rabbit hole][rabbit-hole] we go, this time with Zig.
 Zig was overall a very pleasant experience to program in, despite its youth.
-Learning enough Zig to produce this was easy and took less time compared to doing the same in Rust. 
+Learning enough Zig to produce this was easy and took less time compared to doing [the same in Rust][sudoku-rust].
 I think I prefer Zig to Rust for its simplicity.
 
 However, with my limited and basic testing, Rust produces a 20-30% more performant binary for this particular (weird) task.
@@ -63,5 +63,20 @@ hyperfine --warmup 3 './sudoku.py' --export-markdown python3.md
 |:---|---:|---:|---:|---:|
 | `./sudoku.py` | 38.4 ± 1.0 | 34.9 | 39.6 | 1.00 |
 
+## Better algorithm
+
+In theory, there's a a better algorithm for solving Sudoku puzzles, see:
+
+- [Exact Cover Dancing Links][exact-cover-dancing-links] and the [matrix](exact-cover-matrix).
+- C++ implementation: [sudoku-dlx][sudoku-dlx]
+- [wikipedia article][wiki-sudoku-algorithms]
+
+I might try to implement this in Zig or Lua next.
+
 
 [rabbit-hole]: https://github.com/mlbright/sudoku-norvig-rs#the-rabbit-hole
+[exact-cover-dancing-links]: https://cs.indstate.edu/~bdhome/SUDOKU.pdf
+[exact-cover-matrix]: https://www.stolaf.edu/people/hansonr/sudoku/exactcovermatrix.htm
+[sudoku-dlx]: https://gieseanw.wordpress.com/2011/06/16/solving-sudoku-revisited/
+[wiki-sudoku-algorithms]: https://en.wikipedia.org/wiki/Exact_cover#Sudoku
+[sudoku-rust]: https://github.com/mlbright/sudoku-norvig-rs
